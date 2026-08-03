@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>한산맵 — 공유된 장소</title>
+<meta name="description" content="한산맵에서 공유된 장소입니다. 앱에서 실시간 혼잡도를 확인하세요.">
+<!--
+  공유 딥링크 랜딩 페이지 — https://hongdoc96.github.io/hansanmap/place?area=CODE&name=NAME
+
+  왜 필요한가: AndroidManifest 의 App Links intent-filter 가 이 경로(/hansanmap/place)를 잡고,
+  앱이 설치돼 있으면 브라우저를 거치지 않고 바로 앱이 열린다. 하지만 앱이 없는 사람(=공유받은
+  사람 대부분)에게는 이 URL 이 그대로 열리는데, 페이지가 없으면 404 가 뜬다.
+  즉 이 파일이 없으면 "공유하기"가 받는 사람 입장에선 깨진 링크다.
+
+  게시 위치: GitHub 저장소 `hansanmap` 의 루트에 place/index.html 로 두고 Pages 활성화.
+  (assetlinks.json 은 이미 hongdoc96.github.io 루트에 게시돼 있어 App Links 검증은 통과 상태)
+
+  보안: name/area 는 URL 에서 오는 외부 입력이므로 textContent 로만 쓴다(innerHTML 금지 — XSS).
+-->
+<style>
+  :root {
+    --bg: #ffffff; --fg: #16181d; --sub: #6b7280;
+    --card: #f6f7f9; --line: #e5e7eb; --accent: #2563eb; --accent-fg: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1115; --fg: #f3f4f6; --sub: #9ca3af;
+      --card: #181b21; --line: #262a33; --accent: #3b82f6; --accent-fg: #ffffff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 24px 20px 40px;
+    background: var(--bg); color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+                 "Pretendard", "Noto Sans KR", sans-serif;
+    line-height: 1.6;
+    display: flex; justify-content: center;
+  }
+  .wrap { width: 100%; max-width: 420px; }
+  .brand { font-size: 14px; font-weight: 700; color: var(--sub); letter-spacing: .02em; }
+  .card {
+    margin-top: 14px; padding: 22px 20px;
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+  }
+  .label { font-size: 13px; color: var(--sub); margin: 0; }
+  .place {
+    margin: 6px 0 0; font-size: 26px; font-weight: 800;
+    line-height: 1.3; word-break: keep-all;
+  }
+  .desc { margin: 16px 0 0; font-size: 15px; color: var(--sub); }
+  .btn {
+    display: block; margin-top: 20px; padding: 15px 16px;
+    background: var(--accent); color: var(--accent-fg);
+    border: 0; border-radius: 12px;
+    font-size: 16px; font-weight: 700; text-align: center; text-decoration: none;
+    cursor: pointer; width: 100%;
+  }
+  .hint { margin-top: 14px; font-size: 13px; color: var(--sub); text-align: center; }
+  .foot { margin-top: 26px; font-size: 12px; color: var(--sub); text-align: center; }
+  .foot a { color: var(--sub); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand">한산맵</div>
+
+    <div class="card">
+      <p class="label">공유된 장소</p>
+      <!-- 장소명은 스크립트가 채운다. 파라미터가 없으면 아래 기본 문구가 그대로 남는다. -->
+      <h1 class="place" id="place">공유된 장소</h1>
+      <p class="desc">
+        한산맵에서 이 장소의 <strong>실시간 혼잡도</strong>를 확인할 수 있어요.
+        서울시 실시간 도시데이터와 이용자 제보를 함께 보여줍니다.
+      </p>
+
+      <a class="btn" id="openApp" href="#">앱에서 열기</a>
+      <p class="hint">앱이 설치되어 있으면 바로 열립니다.</p>
+    </div>
+
+    <p class="foot">
+      <a href="https://hongdoc96.github.io/hansanmap-legal/privacy-policy.html">개인정보처리방침</a>
+      &nbsp;·&nbsp;
+      <a href="https://hongdoc96.github.io/hansanmap-legal/terms-of-service.html">이용약관</a>
+    </p>
+  </div>
+
+<script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var name = params.get('name');
+  var area = params.get('area');
+
+  // 외부 입력 — 반드시 textContent 로만 반영한다(innerHTML 쓰면 공유 링크로 XSS 가 된다).
+  if (name && name.trim()) {
+    document.getElementById('place').textContent = name.trim();
+    document.title = name.trim() + ' — 한산맵';
+  }
+
+  // 커스텀 스킴 폴백 — App Links 가 안 잡힌 환경(구버전/인앱 브라우저)에서 앱 열기 시도.
+  // 앱이 없으면 아무 일도 일어나지 않으므로, 없는 스토어 링크를 만들어내지 않고 이 화면에 머문다.
+  var deep = 'kr.hongdoc.hansanmap://place';
+  var qs = [];
+  if (area) qs.push('area=' + encodeURIComponent(area));
+  if (name) qs.push('name=' + encodeURIComponent(name));
+  if (qs.length) deep += '?' + qs.join('&');
+
+  var btn = document.getElementById('openApp');
+  btn.setAttribute('href', deep);
+})();
+</script>
+</body>
+</html>
