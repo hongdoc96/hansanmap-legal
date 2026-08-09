@@ -1,114 +1,229 @@
 <!DOCTYPE html>
+<!--
+  한산맵 공유 딥링크(§6.5) 랜딩 페이지.
+  호스팅 위치: https://hongdoc96.github.io/hansanmap/place/index.html
+  - 앱 설치 + App Links 검증됨 → OS가 이 URL을 가로채 앱 상세로 직행(이 페이지는 안 보임).
+  - 미설치/미검증 → 이 페이지 표시: 커스텀 스킴으로 앱 열기 시도 + 스토어 설치 링크.
+-->
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>한산맵 — 공유된 장소</title>
-<meta name="description" content="한산맵에서 공유된 장소입니다. 앱에서 실시간 혼잡도를 확인하세요.">
-<!--
-  공유 딥링크 랜딩 페이지 — https://hongdoc96.github.io/hansanmap/place?area=CODE&name=NAME
-
-  왜 필요한가: AndroidManifest 의 App Links intent-filter 가 이 경로(/hansanmap/place)를 잡고,
-  앱이 설치돼 있으면 브라우저를 거치지 않고 바로 앱이 열린다. 하지만 앱이 없는 사람(=공유받은
-  사람 대부분)에게는 이 URL 이 그대로 열리는데, 페이지가 없으면 404 가 뜬다.
-  즉 이 파일이 없으면 "공유하기"가 받는 사람 입장에선 깨진 링크다.
-
-  게시 위치: GitHub 저장소 `hansanmap` 의 루트에 place/index.html 로 두고 Pages 활성화.
-  (assetlinks.json 은 이미 hongdoc96.github.io 루트에 게시돼 있어 App Links 검증은 통과 상태)
-
-  보안: name/area 는 URL 에서 오는 외부 입력이므로 textContent 로만 쓴다(innerHTML 금지 — XSS).
--->
-<style>
-  :root {
-    --bg: #ffffff; --fg: #16181d; --sub: #6b7280;
-    --card: #f6f7f9; --line: #e5e7eb; --accent: #2563eb; --accent-fg: #ffffff;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #0f1115; --fg: #f3f4f6; --sub: #9ca3af;
-      --card: #181b21; --line: #262a33; --accent: #3b82f6; --accent-fg: #ffffff;
-    }
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; padding: 24px 20px 40px;
-    background: var(--bg); color: var(--fg);
-    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
-                 "Pretendard", "Noto Sans KR", sans-serif;
-    line-height: 1.6;
-    display: flex; justify-content: center;
-  }
-  .wrap { width: 100%; max-width: 420px; }
-  .brand { font-size: 14px; font-weight: 700; color: var(--sub); letter-spacing: .02em; }
-  .card {
-    margin-top: 14px; padding: 22px 20px;
-    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
-  }
-  .label { font-size: 13px; color: var(--sub); margin: 0; }
-  .place {
-    margin: 6px 0 0; font-size: 26px; font-weight: 800;
-    line-height: 1.3; word-break: keep-all;
-  }
-  .desc { margin: 16px 0 0; font-size: 15px; color: var(--sub); }
-  .btn {
-    display: block; margin-top: 20px; padding: 15px 16px;
-    background: var(--accent); color: var(--accent-fg);
-    border: 0; border-radius: 12px;
-    font-size: 16px; font-weight: 700; text-align: center; text-decoration: none;
-    cursor: pointer; width: 100%;
-  }
-  .hint { margin-top: 14px; font-size: 13px; color: var(--sub); text-align: center; }
-  .foot { margin-top: 26px; font-size: 12px; color: var(--sub); text-align: center; }
-  .foot a { color: var(--sub); }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>한산맵에서 열기</title>
+  <!-- OG 태그(rank6) — 카톡/SNS 공유 시 카드 미리보기(맨 URL 방지). 무자본 유입의 최대 누수 수리.
+       ⚠️ og:image 는 행님이 GitHub Pages 에 og-image.png(1200×630 권장) 업로드 후 아래 URL 확인 필요. -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="한산맵" />
+  <meta property="og:title" content="한산맵 — 지금 여기 붐빌까?" />
+  <meta property="og:description" content="서울 실시간 혼잡도로 지금 갈 곳을 5초 만에 결정하세요." />
+  <meta property="og:image" content="https://hongdoc96.github.io/hansanmap/og-image.png" />
+  <meta property="og:url" content="https://hongdoc96.github.io/hansanmap/place/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="한산맵 — 지금 여기 붐빌까?" />
+  <meta name="twitter:description" content="서울 실시간 혼잡도로 지금 갈 곳을 5초 만에 결정하세요." />
+  <style>
+    body { font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+           background: #F4F6F8; color: #1B2733; margin: 0; padding: 0;
+           display: flex; min-height: 100vh; align-items: center; justify-content: center; }
+    .card { background: #fff; border-radius: 16px; padding: 28px 24px; max-width: 340px; width: 86%;
+            box-shadow: 0 6px 24px rgba(0,0,0,.08); text-align: center; }
+    h1 { font-size: 20px; margin: 0 0 6px; }
+    p  { font-size: 14px; color: #5B6B7B; margin: 0 0 20px; }
+    a.btn { display: block; text-decoration: none; font-weight: 700; font-size: 15px;
+            border-radius: 10px; padding: 13px 0; margin: 8px 0; }
+    .open  { background: #2F6BFF; color: #fff; }
+    .store { background: #EAF0F7; color: #2F6BFF; }
+    /* 라이브 혼잡도 카드(확장 P1) — 링크만 받아도 '지금 어떤지'가 보이는 전파 가치의 본체 */
+    #live { display: none; background: #F4F8FF; border-radius: 12px;
+            padding: 14px 12px; margin: 0 0 18px; }
+    #live .lv { font-size: 17px; font-weight: 800; margin: 0 0 3px; }
+    #live .ts { font-size: 12px; color: #8595A5; margin: 0; }
+    /* 붐빌 때만 나오는 두 줄(확장 V3) — '그래서 어디로/언제' 까지 링크 안에서 답한다 */
+    #liveEase { display: none; font-size: 13px; font-weight: 700; color: #1B2733;
+                margin: 8px 0 0; }
+    #liveAlts { display: none; margin: 8px 0 0; text-align: left; }
+    #liveAlts .h { font-size: 12px; color: #8595A5; margin: 0 0 5px; }
+    #liveAlts .a { font-size: 13px; font-weight: 700; color: #1B2733; margin: 0 0 3px; }
+    #liveAlts .a .d { font-weight: 400; color: #8595A5; }
+  </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="brand">한산맵</div>
-
-    <div class="card">
-      <p class="label">공유된 장소</p>
-      <!-- 장소명은 스크립트가 채운다. 파라미터가 없으면 아래 기본 문구가 그대로 남는다. -->
-      <h1 class="place" id="place">공유된 장소</h1>
-      <p class="desc">
-        한산맵에서 이 장소의 <strong>실시간 혼잡도</strong>를 확인할 수 있어요.
-        서울시 실시간 도시데이터와 이용자 제보를 함께 보여줍니다.
-      </p>
-
-      <a class="btn" id="openApp" href="#">앱에서 열기</a>
-      <p class="hint">앱이 설치되어 있으면 바로 열립니다.</p>
+  <div class="card">
+    <h1 id="title">한산맵에서 보기</h1>
+    <!-- 실시간 혼잡도(동네 공유 링크 한정) — 실패/매장 링크면 통째로 숨김(억지 표시 금지) -->
+    <div id="live">
+      <p class="lv" id="liveLevel"></p>
+      <p class="ts" id="liveTime"></p>
+      <!-- 붐빌 때만(확장 V3): 언제 풀리는지 + 근처 한산한 대안. 한산하면 둘 다 침묵. -->
+      <p id="liveEase"></p>
+      <div id="liveAlts"></div>
     </div>
-
-    <p class="foot">
-      <a href="https://hongdoc96.github.io/hansanmap-legal/privacy-policy.html">개인정보처리방침</a>
-      &nbsp;·&nbsp;
-      <a href="https://hongdoc96.github.io/hansanmap-legal/terms-of-service.html">이용약관</a>
-    </p>
+    <p>앱이 설치돼 있으면 자동으로 열려요.<br/>안 열리면 아래 버튼을 눌러주세요.</p>
+    <a class="btn open" id="openApp" href="#">앱에서 열기</a>
+    <a class="btn store" id="storeLink" href="https://play.google.com/store/apps/details?id=kr.hongdoc.hansanmap">한산맵 설치하기</a>
   </div>
+  <script>
+    // 현재 https URL의 쿼리를 커스텀 스킴으로 변환해 앱 열기 시도(미설치면 아무 일 없음).
+    (function () {
+      var qs = window.location.search || '';
+      var scheme = 'kr.hongdoc.hansanmap://place' + qs;
+      document.getElementById('openApp').setAttribute('href', scheme);
+      // 공유 링크 라이브 혼잡도(확장 P1) — 동네(area 코드) 링크면 Supabase 공개(anon) RPC로
+      // 현재 혼잡 단계를 표시. 받는 사람이 앱 설치 전에 가치를 먼저 봄(카톡방 전파 루프).
+      // anon 키는 앱에도 내장된 공개 키(RLS 보호) — 서버 비밀 아님. 실패 시 조용히 미표시.
+      // 서울시 4단계 순위 — 클수록 붐빔. 대안은 '지금보다 낮은 단계'만 고른다(앱 대안칩과 동일 기준).
+      // ⚠️ 실제 반환값은 공백 없는 '약간붐빔' — 앱 isStdCrowdLabel 과 같은 정규화(공백 제거)를 거쳐 찾는다.
+      var RANK = { '여유': 0, '보통': 1, '약간붐빔': 2, '붐빔': 3 };
+      function norm(l) { return String(l == null ? '' : l).replace(/\s/g, ''); }
+      function rankOf(l) { return RANK[norm(l)]; }
 
-<script>
-(function () {
-  var params = new URLSearchParams(window.location.search);
-  var name = params.get('name');
-  var area = params.get('area');
+      // Supabase 공개(anon) RPC 호출 한 겹 — 세 호출이 같은 헤더를 쓴다.
+      function rpc(SB, ANON, fn, body) {
+        return fetch(SB + '/rest/v1/rpc/' + fn, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'apikey': ANON,
+                     'Authorization': 'Bearer ' + ANON },
+          body: JSON.stringify(body || {})
+        }).then(function (r) { return r.json(); });
+      }
 
-  // 외부 입력 — 반드시 textContent 로만 반영한다(innerHTML 쓰면 공유 링크로 XSS 가 된다).
-  if (name && name.trim()) {
-    document.getElementById('place').textContent = name.trim();
-    document.title = name.trim() + ' — 한산맵';
-  }
+      // 두 좌표 사이 거리(m) — 하버사인(앱 GeoDistance 와 같은 정의).
+      function meters(la1, ln1, la2, ln2) {
+        var R = 6371000, t = Math.PI / 180;
+        var dLa = (la2 - la1) * t, dLn = (ln2 - ln1) * t;
+        var a = Math.sin(dLa / 2) * Math.sin(dLa / 2) +
+                Math.cos(la1 * t) * Math.cos(la2 * t) * Math.sin(dLn / 2) * Math.sin(dLn / 2);
+        return 2 * R * Math.asin(Math.min(1, Math.sqrt(a)));
+      }
 
-  // 커스텀 스킴 폴백 — App Links 가 안 잡힌 환경(구버전/인앱 브라우저)에서 앱 열기 시도.
-  // 앱이 없으면 아무 일도 일어나지 않으므로, 없는 스토어 링크를 만들어내지 않고 이 화면에 머문다.
-  var deep = 'kr.hongdoc.hansanmap://place';
-  var qs = [];
-  if (area) qs.push('area=' + encodeURIComponent(area));
-  if (name) qs.push('name=' + encodeURIComponent(name));
-  if (qs.length) deep += '?' + qs.join('&');
+      function distLabel(d) {
+        return d < 1000 ? Math.round(d) + 'm' : (d / 1000).toFixed(1) + 'km';
+      }
 
-  var btn = document.getElementById('openApp');
-  btn.setAttribute('href', deep);
-})();
-</script>
+      // 붐비는 링크 승격(확장 V3) — 링크가 '지금 붐빔'에서 끝나면 받는 사람은 막다른 길에 선다.
+      //   ① 근처 더 한산한 곳 2곳  ② 언제 풀리는지
+      // 둘 다 실패하면 조용히 기존 한 줄만 남는다(억지 표시 금지 — 앱과 같은 침묵 규약).
+      function upgradeBusy(area, SB, ANON) {
+        rpc(SB, ANON, 'list_seoul_area_status').then(function (rows) {
+          if (!rows || !rows.length) return;
+          var self = null, i;
+          for (i = 0; i < rows.length; i++) {
+            if (rows[i].area_code === area) { self = rows[i]; break; }
+          }
+          if (!self || self.lat == null || self.lng == null) return;
+          var myRank = rankOf(self.congestion_level);
+          if (myRank === undefined) return;
+          // 3km 이내 · 지금보다 한 단계 이상 한산한 곳만, 가까운 순 2곳.
+          var alts = [];
+          for (i = 0; i < rows.length; i++) {
+            var c = rows[i];
+            if (c.area_code === area || c.lat == null || c.lng == null) continue;
+            var r = rankOf(c.congestion_level);
+            if (r === undefined || r >= myRank) continue;
+            var d = meters(self.lat, self.lng, c.lat, c.lng);
+            if (d <= 3000) alts.push({ name: c.area_name, lvl: c.congestion_level, r: r, d: d });
+          }
+          // 한산한 순 → 같으면 가까운 순. 거리만으로 뽑으면 '111m 앞 약간붐빔'처럼 체감 개선이 없는
+          // 곳이 1순위가 된다(어차피 3km 이내 후보라 거리차보다 단계차가 결정을 더 바꾼다).
+          alts.sort(function (a, b) { return a.r !== b.r ? a.r - b.r : a.d - b.d; });
+          if (alts.length) {
+            var box = document.getElementById('liveAlts');
+            var h = document.createElement('p');
+            h.className = 'h';
+            h.textContent = '근처 더 한산한 곳';
+            box.appendChild(h);
+            for (i = 0; i < Math.min(2, alts.length); i++) {
+              var p = document.createElement('p');
+              p.className = 'a';
+              p.textContent = alts[i].name;
+              var sp = document.createElement('span');
+              sp.className = 'd';
+              sp.textContent = ' ' + distLabel(alts[i].d) + ' · ' + alts[i].lvl;
+              p.appendChild(sp);
+              box.appendChild(p);
+            }
+            box.style.display = 'block';
+          }
+          // 이름은 URL 문자열이 아니라 방금 받은 area_name 을 쓴다 — 공유 링크의 name 은 표시용이라
+          // 예측 RPC 의 동네명과 어긋날 수 있고, 어긋나면 조용히 0행이 돌아온다.
+          if (self.area_name) easeAt(self.area_name, myRank, SB, ANON);
+        }).catch(function () { /* 미표시 */ });
+      }
+
+      // 언제 풀리는지 — 12시간 예측에서 '지금보다 낮은 단계가 지속되는' 첫 시각(앱과 동일 규약).
+      // 한 시간 반짝 낮아지는 값으로 약속을 만들지 않는다.
+      function easeAt(areaName, myRank, SB, ANON) {
+        rpc(SB, ANON, 'get_seoul_area_forecast', { p_area_name: areaName }).then(function (rows) {
+          if (!rows || !rows.length) return;
+          var pts = [], i;
+          for (i = 0; i < rows.length; i++) {
+            if (rows[i].is_current || !rows[i].target_at) continue;
+            pts.push({ at: new Date(rows[i].target_at), rank: rankOf(rows[i].level) });
+          }
+          pts.sort(function (a, b) { return a.at - b.at; });
+          for (i = 0; i < pts.length; i++) {
+            if (pts[i].rank === undefined || pts[i].rank >= myRank) continue;
+            var next = pts[i + 1];
+            if (next && (next.rank === undefined || next.rank >= myRank)) continue;
+            // 시각은 KST 고정 — 브라우저 시간대가 어디든 서울 벽시계로 읽혀야 한다.
+            var kst = new Date(pts[i].at.getTime() + 9 * 3600 * 1000);
+            var el = document.getElementById('liveEase');
+            el.textContent = kst.getUTCHours() + '시 이후 풀릴 것으로 예상돼요';
+            el.style.display = 'block';
+            return;
+          }
+        }).catch(function () { /* 미표시 */ });
+      }
+
+      try {
+        var params = new URLSearchParams(qs);
+        var area = params.get('area');
+        var name = params.get('name');
+        if (name) {
+          document.getElementById('title').textContent = name + ' — 한산맵에서 보기';
+        }
+        if (area) {
+          var SB = 'https://zrvuucvjcmlcvhhvfzzd.supabase.co';
+          var ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpydnV1Y3ZqY21sY3ZoaHZmenpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMzQwNjIsImV4cCI6MjA5NjYxMDA2Mn0.PgwGvh1qS27t7AcepWtIm26MlZ6KkrplAOIMfRHgKFQ';
+          fetch(SB + '/rest/v1/rpc/get_seoul_area_detail', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'apikey': ANON,
+                       'Authorization': 'Bearer ' + ANON },
+            body: JSON.stringify({ p_area_code: area })
+          }).then(function (r) { return r.json(); }).then(function (rows) {
+            var row = rows && rows[0];
+            if (!row || !row.congest_lvl) return;
+            // 서울시 단계 → 이모지 색(앱 신호색과 동일 의미)
+            // 실제 반환값은 공백 없는 '약간붐빔' — 공백 포함 키로 찾던 탓에 이 단계가 ⚪ 로 떨어지고 있었다.
+            var emo = { '여유': '🟢', '보통': '🟡', '약간붐빔': '🟠', '붐빔': '🔴' }[norm(row.congest_lvl)] || '⚪';
+            var ageMin = row.updated_at
+              ? Math.max(0, Math.round((Date.now() - new Date(row.updated_at).getTime()) / 60000))
+              : null;
+            // 2시간 넘게 낡은 값은 '지금'으로 단정하지 않음(앱 정직성 규약과 동일) — 미표시
+            if (ageMin !== null && ageMin > 120) return;
+            document.getElementById('liveLevel').textContent =
+              '지금 ' + emo + ' ' + row.congest_lvl;
+            document.getElementById('liveTime').textContent =
+              ageMin === null ? '서울시 실시간 도시데이터 기준'
+                              : ageMin + '분 전 · 서울시 실시간 도시데이터 기준';
+            document.getElementById('live').style.display = 'block';
+            // 붐빌 때만 '그래서 어디로 · 언제'까지 답한다(V3). 여유/보통이면 호출조차 안 한다
+            // (한산한 곳에 대안을 들이대면 링크가 시끄러워지고 결정에 방해가 된다).
+            if (rankOf(row.congest_lvl) >= 2) upgradeBusy(area, SB, ANON);
+          }).catch(function () { /* 미표시 */ });
+        }
+      } catch (e) { /* 구형 브라우저 등 — 라이브 없이 기존 랜딩 동작 */ }
+      // 스토어 버튼 — iOS 는 App Store, 그 외는 Play(rank6, OS별 정확한 설치 경로).
+      // iPadOS 13+ 는 기본 UA 가 'Macintosh'(데스크톱 클래스)라 터치포인트로 보강 판별.
+      var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      if (isIOS) {
+        document.getElementById('storeLink')
+          .setAttribute('href', 'https://apps.apple.com/app/id6783810617');
+      }
+      // 진입 즉시 1회 자동 시도(사용자 제스처 없이 차단되는 브라우저도 있어 버튼 병행).
+      window.location.href = scheme;
+    })();
+  </script>
 </body>
 </html>
