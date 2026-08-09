@@ -40,7 +40,7 @@ footer{margin-top:3em;padding-top:1em;border-top:1px solid #eee;color:#999;font-
 </tr>
 <tr>
 <td>활동</td>
-<td>제보 내용(혼잡도/웨이팅/좌석/메모), 즐겨찾기, 리뷰(별점·내용 — 표시 이름과 함께 다른 이용자에게 공개), 최근 본 장소(<strong>로그인 계정에 한해</strong> 기기 간 동기화), 수신 알림 이력(제목·내용·관련 장소명·수신 시각·읽음 여부), 검색어(<strong>미지원 지역 오픈 알림을 신청한 경우에 한해</strong> 입력한 지역명 저장)</td>
+<td>제보 내용(혼잡도/웨이팅/좌석/메모), 즐겨찾기, 리뷰(별점·내용 — 표시 이름과 함께 다른 이용자에게 공개), 리뷰·제보 신고 기록(신고 대상과 사유), 최근 본 장소(<strong>로그인 계정에 한해</strong> 기기 간 동기화), 수신 알림 이력(제목·내용·관련 장소명·수신 시각·읽음 여부), 검색어(<strong>미지원 지역 오픈 알림을 신청한 경우에 한해</strong> 입력한 지역명 저장)</td>
 <td>서비스 이용 시</td>
 </tr>
 <tr>
@@ -88,15 +88,17 @@ footer{margin-top:3em;padding-top:1em;border-top:1px solid #eee;color:#999;font-
 <li>이용자의 개인정보를 외부에 제공하지 않습니다.</li>
 <li>서비스 운영을 위해 다음에 처리를 위탁합니다.
   <ul>
-  <li>Supabase(데이터 저장/인증) · Google Firebase(푸시 알림·오류 진단) · 카카오(지도/로그인)</li>
+  <li>Supabase(데이터 저장/인증) · Google Firebase(푸시 알림·오류 진단·<strong>리뷰 및 리뷰 신고 저장</strong>) · 카카오(지도/로그인)</li>
   <li>PostHog(서비스 이용 통계 분석) · Google Firebase Crashlytics(오류 진단)</li>
   </ul>
 </li>
 <li>다음 정보는 <strong>미국 소재 서버</strong>에서 처리됩니다(국외이전).
   <ul>
   <li>이전 항목 ①(익명 식별자 기준): 앱 이용 이벤트·크래시 로그 — PostHog · Google Firebase Crashlytics</li>
-  <li>이전 항목 ②(계정 식별자와 연결됨): 계정 정보, 제보·즐겨찾기·리뷰, 최근 본 장소,
+  <li>이전 항목 ②(계정 식별자와 연결됨): 계정 정보, 제보·즐겨찾기, 최근 본 장소,
     수신 알림 이력, 알림 수신 설정 — Supabase Inc.</li>
+  <li>이전 항목 ③(계정 식별자와 연결됨): 리뷰(별점·내용·표시 이름), 리뷰 신고 기록 —
+    Google LLC(Firebase Firestore)</li>
   <li>이전 시점: 서비스 이용 시 / 이전 방법: HTTPS 전송 / 보유기간: 위 3항과 같음</li>
   <li>이용자는 국외이전을 거부할 수 있으나, 거부 시 계정 기반 기능(로그인·제보·즐겨찾기·알림)을
     이용할 수 없습니다.</li>
