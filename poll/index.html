@@ -138,11 +138,18 @@
 
         optsEl.innerHTML = '';
         // 가장 한산한 후보를 표시로 알려준다 — '추천'이 아니라 사실 서술(정직성).
+        // 동률이면 전부 붙여 거짓 단독 1위를 만들지 않되, **전부 같은 단계면 아무에게도 안 붙인다**
+        // — 모든 후보에 같은 줄이 붙으면 정보가 0이고 화면만 시끄럽다(실배포 검증에서 드러남).
         var bestRank = 99;
+        var worstRank = -1;
         for (var i = 0; i < cands.length; i++) {
           var r = RANK[norm(levels[cands[i].code])];
-          if (r !== undefined && r < bestRank) bestRank = r;
+          if (r === undefined) continue;
+          if (r < bestRank) bestRank = r;
+          if (r > worstRank) worstRank = r;
         }
+        var hasWinner = bestRank < worstRank; // 단계 차이가 실제로 있을 때만
+
         for (var i = 0; i < cands.length; i++) {
           (function (idx) {
             var c = cands[idx];
@@ -174,8 +181,9 @@
             row.appendChild(ct);
             el.appendChild(row);
 
-            // 지금 가장 한산한 후보에만 한 줄 — 여러 곳이 동률이면 전부 붙는다(거짓 단독 1위 금지).
-            if (rk !== undefined && rk === bestRank && cands.length > 1) {
+            // 지금 가장 한산한 후보에만 한 줄 — 동률이면 전부 붙되(거짓 단독 1위 금지),
+            // 전부 같은 단계(hasWinner=false)면 아무에게도 안 붙인다.
+            if (hasWinner && rk !== undefined && rk === bestRank) {
               var why = document.createElement('div');
               why.className = 'why';
               why.textContent = '지금 이 중 가장 한산해요';
