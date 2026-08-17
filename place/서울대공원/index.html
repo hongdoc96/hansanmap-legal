@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>서울대공원 혼잡도 — 지금 붐빌까? 실시간·시간대별 | 한산맵</title>
+<meta name="description" content="서울대공원 실시간 혼잡도와 평소 요일·시간대 패턴. 평소 일요일 12시쯤이 가장 붐벼요 · 일요일 9시쯤이 가장 한산해요. 서울시 실시간 도시데이터 기반.">
+<link rel="canonical" href="https://hongdoc96.github.io/hansanmap-legal/place/서울대공원/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="한산맵">
+<meta property="og:title" content="서울대공원 혼잡도 — 지금 붐빌까?">
+<meta property="og:description" content="서울대공원 실시간 혼잡도와 평소 요일·시간대 패턴. 평소 일요일 12시쯤이 가장 붐벼요 · 일요일 9시쯤이 가장 한산해요. 서울시 실시간 도시데이터 기반.">
+<meta property="og:url" content="https://hongdoc96.github.io/hansanmap-legal/place/서울대공원/">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Place", "name": "서울대공원", "geo": {"@type": "GeoCoordinates", "latitude": 37.436451567677, "longitude": 127.013898253621}, "address": {"@type": "PostalAddress", "addressRegion": "서울특별시", "addressCountry": "KR"}}</script>
+<style>
+ body{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:#F4F6F8;color:#1B2733;margin:0}
+ .wrap{max-width:560px;margin:0 auto;padding:20px 16px 48px}
+ a{color:#2F6BFF} h1{font-size:24px;margin:8px 0 4px}
+ .crumb{font-size:12.5px;color:#8595A5} .crumb a{color:#8595A5;text-decoration:none}
+ .card{background:#fff;border-radius:14px;padding:16px;margin:14px 0;box-shadow:0 3px 14px rgba(0,0,0,.06)}
+ #live{display:none} #liveLevel{font-size:20px;font-weight:800;margin:0 0 2px}
+ #liveVs{font-size:14px;font-weight:700;margin:6px 0 0;color:#1B2733}
+ .ts{font-size:12px;color:#8595A5;margin:4px 0 0}
+ .sum{font-size:15px;margin:0}
+ table{border-collapse:collapse;width:100%;table-layout:fixed}
+ th{font-size:10.5px;color:#8595A5;font-weight:600;padding:0 3px 0 0;text-align:right;width:20px}
+ td{height:16px;border-radius:3px;border:1px solid #fff}
+ td.na{background:#E7ECF1}
+ .hx{font-size:9.5px;color:#8595A5;display:flex;justify-content:space-between;padding-left:23px;margin-top:3px}
+ .leg{display:flex;gap:10px;font-size:11.5px;color:#5B6B7B;margin-top:9px;flex-wrap:wrap}
+ .leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+ h2{font-size:16px;margin:0 0 9px}
+ .near{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+ .near a{background:#fff;border-radius:10px;padding:11px 12px;text-decoration:none;color:#1B2733;font-size:13.5px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+ .near a span{display:block;font-weight:400;font-size:11.5px;color:#8595A5;margin-top:2px}
+ .cta{display:block;text-align:center;background:#2F6BFF;color:#fff;text-decoration:none;font-weight:800;font-size:15px;border-radius:12px;padding:14px 0;margin:18px 0 8px}
+ .cta2{display:block;text-align:center;background:#EAF0F7;color:#2F6BFF;text-decoration:none;font-weight:700;font-size:14px;border-radius:12px;padding:12px 0}
+ .src{font-size:11.5px;color:#8595A5;line-height:1.6;margin-top:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <p class="crumb"><a href="../">서울 혼잡도</a> › 서울대공원</p>
+ <h1>서울대공원 혼잡도</h1>
+ <div class="card" id="live">
+  <p id="liveLevel"></p>
+  <p id="liveVs"></p>
+  <p class="ts" id="liveTime"></p>
+ </div>
+ <div class="card"><p class="sum">평소 <b>일요일 12시</b>쯤이 가장 붐벼요 · <b>일요일 9시</b>쯤이 가장 한산해요</p></div>
+ <div class="card">
+  <h2>평소 요일·시간대 혼잡 패턴</h2>
+  <table aria-label="서울대공원 요일·시간대별 평소 혼잡도"><tbody><tr><th scope="row">일</th><td style="background:#3182F6" title="일 0시 · 평소 여유"></td><td style="background:#3182F6" title="일 1시 · 평소 여유"></td><td style="background:#3182F6" title="일 2시 · 평소 여유"></td><td style="background:#3182F6" title="일 3시 · 평소 여유"></td><td style="background:#3182F6" title="일 4시 · 평소 여유"></td><td style="background:#3182F6" title="일 5시 · 평소 여유"></td><td style="background:#3182F6" title="일 6시 · 평소 여유"></td><td style="background:#3182F6" title="일 7시 · 평소 여유"></td><td style="background:#3182F6" title="일 8시 · 평소 여유"></td><td style="background:#3182F6" title="일 9시 · 평소 여유"></td><td style="background:#3182F6" title="일 10시 · 평소 여유"></td><td style="background:#F5B921" title="일 11시 · 평소 보통"></td><td style="background:#F57F2C" title="일 12시 · 평소 약간붐빔"></td><td style="background:#F57F2C" title="일 13시 · 평소 약간붐빔"></td><td style="background:#F57F2C" title="일 14시 · 평소 약간붐빔"></td><td style="background:#F57F2C" title="일 15시 · 평소 약간붐빔"></td><td style="background:#F57F2C" title="일 16시 · 평소 약간붐빔"></td><td style="background:#F57F2C" title="일 17시 · 평소 약간붐빔"></td><td style="background:#F57F2C" title="일 18시 · 평소 약간붐빔"></td><td style="background:#3182F6" title="일 19시 · 평소 여유"></td><td style="background:#3182F6" title="일 20시 · 평소 여유"></td><td style="background:#3182F6" title="일 21시 · 평소 여유"></td><td style="background:#3182F6" title="일 22시 · 평소 여유"></td><td style="background:#3182F6" title="일 23시 · 평소 여유"></td></tr><tr><th scope="row">월</th><td style="background:#3182F6" title="월 0시 · 평소 여유"></td><td style="background:#3182F6" title="월 1시 · 평소 여유"></td><td style="background:#3182F6" title="월 2시 · 평소 여유"></td><td style="background:#3182F6" title="월 3시 · 평소 여유"></td><td style="background:#3182F6" title="월 4시 · 평소 여유"></td><td style="background:#3182F6" title="월 5시 · 평소 여유"></td><td style="background:#3182F6" title="월 6시 · 평소 여유"></td><td style="background:#3182F6" title="월 7시 · 평소 여유"></td><td style="background:#3182F6" title="월 8시 · 평소 여유"></td><td style="background:#3182F6" title="월 9시 · 평소 여유"></td><td style="background:#3182F6" title="월 10시 · 평소 여유"></td><td style="background:#3182F6" title="월 11시 · 평소 여유"></td><td style="background:#3182F6" title="월 12시 · 평소 여유"></td><td style="background:#3182F6" title="월 13시 · 평소 여유"></td><td style="background:#3182F6" title="월 14시 · 평소 여유"></td><td style="background:#3182F6" title="월 15시 · 평소 여유"></td><td style="background:#3182F6" title="월 16시 · 평소 여유"></td><td style="background:#3182F6" title="월 17시 · 평소 여유"></td><td style="background:#3182F6" title="월 18시 · 평소 여유"></td><td style="background:#3182F6" title="월 19시 · 평소 여유"></td><td style="background:#3182F6" title="월 20시 · 평소 여유"></td><td style="background:#3182F6" title="월 21시 · 평소 여유"></td><td style="background:#3182F6" title="월 22시 · 평소 여유"></td><td style="background:#3182F6" title="월 23시 · 평소 여유"></td></tr><tr><th scope="row">화</th><td style="background:#3182F6" title="화 0시 · 평소 여유"></td><td style="background:#3182F6" title="화 1시 · 평소 여유"></td><td style="background:#3182F6" title="화 2시 · 평소 여유"></td><td style="background:#3182F6" title="화 3시 · 평소 여유"></td><td style="background:#3182F6" title="화 4시 · 평소 여유"></td><td style="background:#3182F6" title="화 5시 · 평소 여유"></td><td style="background:#3182F6" title="화 6시 · 평소 여유"></td><td style="background:#3182F6" title="화 7시 · 평소 여유"></td><td style="background:#3182F6" title="화 8시 · 평소 여유"></td><td style="background:#3182F6" title="화 9시 · 평소 여유"></td><td style="background:#3182F6" title="화 10시 · 평소 여유"></td><td style="background:#3182F6" title="화 11시 · 평소 여유"></td><td style="background:#3182F6" title="화 12시 · 평소 여유"></td><td style="background:#3182F6" title="화 13시 · 평소 여유"></td><td style="background:#3182F6" title="화 14시 · 평소 여유"></td><td style="background:#3182F6" title="화 15시 · 평소 여유"></td><td style="background:#3182F6" title="화 16시 · 평소 여유"></td><td style="background:#3182F6" title="화 17시 · 평소 여유"></td><td style="background:#3182F6" title="화 18시 · 평소 여유"></td><td style="background:#3182F6" title="화 19시 · 평소 여유"></td><td style="background:#3182F6" title="화 20시 · 평소 여유"></td><td style="background:#3182F6" title="화 21시 · 평소 여유"></td><td style="background:#3182F6" title="화 22시 · 평소 여유"></td><td style="background:#3182F6" title="화 23시 · 평소 여유"></td></tr><tr><th scope="row">수</th><td style="background:#3182F6" title="수 0시 · 평소 여유"></td><td style="background:#3182F6" title="수 1시 · 평소 여유"></td><td style="background:#3182F6" title="수 2시 · 평소 여유"></td><td style="background:#3182F6" title="수 3시 · 평소 여유"></td><td style="background:#3182F6" title="수 4시 · 평소 여유"></td><td style="background:#3182F6" title="수 5시 · 평소 여유"></td><td style="background:#3182F6" title="수 6시 · 평소 여유"></td><td style="background:#3182F6" title="수 7시 · 평소 여유"></td><td style="background:#3182F6" title="수 8시 · 평소 여유"></td><td style="background:#3182F6" title="수 9시 · 평소 여유"></td><td style="background:#3182F6" title="수 10시 · 평소 여유"></td><td style="background:#3182F6" title="수 11시 · 평소 여유"></td><td style="background:#3182F6" title="수 12시 · 평소 여유"></td><td style="background:#3182F6" title="수 13시 · 평소 여유"></td><td style="background:#3182F6" title="수 14시 · 평소 여유"></td><td style="background:#3182F6" title="수 15시 · 평소 여유"></td><td style="background:#3182F6" title="수 16시 · 평소 여유"></td><td style="background:#3182F6" title="수 17시 · 평소 여유"></td><td style="background:#3182F6" title="수 18시 · 평소 여유"></td><td style="background:#3182F6" title="수 19시 · 평소 여유"></td><td style="background:#3182F6" title="수 20시 · 평소 여유"></td><td style="background:#3182F6" title="수 21시 · 평소 여유"></td><td style="background:#3182F6" title="수 22시 · 평소 여유"></td><td style="background:#3182F6" title="수 23시 · 평소 여유"></td></tr><tr><th scope="row">목</th><td style="background:#3182F6" title="목 0시 · 평소 여유"></td><td style="background:#3182F6" title="목 1시 · 평소 여유"></td><td style="background:#3182F6" title="목 2시 · 평소 여유"></td><td style="background:#3182F6" title="목 3시 · 평소 여유"></td><td style="background:#3182F6" title="목 4시 · 평소 여유"></td><td style="background:#3182F6" title="목 5시 · 평소 여유"></td><td style="background:#3182F6" title="목 6시 · 평소 여유"></td><td style="background:#3182F6" title="목 7시 · 평소 여유"></td><td style="background:#3182F6" title="목 8시 · 평소 여유"></td><td style="background:#3182F6" title="목 9시 · 평소 여유"></td><td style="background:#3182F6" title="목 10시 · 평소 여유"></td><td style="background:#3182F6" title="목 11시 · 평소 여유"></td><td style="background:#3182F6" title="목 12시 · 평소 여유"></td><td style="background:#3182F6" title="목 13시 · 평소 여유"></td><td style="background:#3182F6" title="목 14시 · 평소 여유"></td><td style="background:#3182F6" title="목 15시 · 평소 여유"></td><td style="background:#3182F6" title="목 16시 · 평소 여유"></td><td style="background:#3182F6" title="목 17시 · 평소 여유"></td><td style="background:#3182F6" title="목 18시 · 평소 여유"></td><td style="background:#3182F6" title="목 19시 · 평소 여유"></td><td style="background:#3182F6" title="목 20시 · 평소 여유"></td><td style="background:#3182F6" title="목 21시 · 평소 여유"></td><td style="background:#3182F6" title="목 22시 · 평소 여유"></td><td style="background:#3182F6" title="목 23시 · 평소 여유"></td></tr><tr><th scope="row">금</th><td style="background:#3182F6" title="금 0시 · 평소 여유"></td><td style="background:#3182F6" title="금 1시 · 평소 여유"></td><td style="background:#3182F6" title="금 2시 · 평소 여유"></td><td style="background:#3182F6" title="금 3시 · 평소 여유"></td><td style="background:#3182F6" title="금 4시 · 평소 여유"></td><td style="background:#3182F6" title="금 5시 · 평소 여유"></td><td style="background:#3182F6" title="금 6시 · 평소 여유"></td><td style="background:#3182F6" title="금 7시 · 평소 여유"></td><td style="background:#3182F6" title="금 8시 · 평소 여유"></td><td style="background:#3182F6" title="금 9시 · 평소 여유"></td><td style="background:#3182F6" title="금 10시 · 평소 여유"></td><td style="background:#3182F6" title="금 11시 · 평소 여유"></td><td style="background:#3182F6" title="금 12시 · 평소 여유"></td><td style="background:#3182F6" title="금 13시 · 평소 여유"></td><td style="background:#3182F6" title="금 14시 · 평소 여유"></td><td style="background:#3182F6" title="금 15시 · 평소 여유"></td><td style="background:#3182F6" title="금 16시 · 평소 여유"></td><td style="background:#3182F6" title="금 17시 · 평소 여유"></td><td style="background:#3182F6" title="금 18시 · 평소 여유"></td><td style="background:#3182F6" title="금 19시 · 평소 여유"></td><td style="background:#3182F6" title="금 20시 · 평소 여유"></td><td style="background:#3182F6" title="금 21시 · 평소 여유"></td><td style="background:#3182F6" title="금 22시 · 평소 여유"></td><td style="background:#3182F6" title="금 23시 · 평소 여유"></td></tr><tr><th scope="row">토</th><td style="background:#3182F6" title="토 0시 · 평소 여유"></td><td style="background:#3182F6" title="토 1시 · 평소 여유"></td><td style="background:#3182F6" title="토 2시 · 평소 여유"></td><td style="background:#3182F6" title="토 3시 · 평소 여유"></td><td style="background:#3182F6" title="토 4시 · 평소 여유"></td><td style="background:#3182F6" title="토 5시 · 평소 여유"></td><td style="background:#3182F6" title="토 6시 · 평소 여유"></td><td style="background:#3182F6" title="토 7시 · 평소 여유"></td><td style="background:#3182F6" title="토 8시 · 평소 여유"></td><td style="background:#3182F6" title="토 9시 · 평소 여유"></td><td style="background:#3182F6" title="토 10시 · 평소 여유"></td><td style="background:#F57F2C" title="토 11시 · 평소 약간붐빔"></td><td style="background:#F57F2C" title="토 12시 · 평소 약간붐빔"></td><td style="background:#F57F2C" title="토 13시 · 평소 약간붐빔"></td><td style="background:#F57F2C" title="토 14시 · 평소 약간붐빔"></td><td style="background:#F57F2C" title="토 15시 · 평소 약간붐빔"></td><td style="background:#F57F2C" title="토 16시 · 평소 약간붐빔"></td><td style="background:#F57F2C" title="토 17시 · 평소 약간붐빔"></td><td style="background:#F57F2C" title="토 18시 · 평소 약간붐빔"></td><td style="background:#F57F2C" title="토 19시 · 평소 약간붐빔"></td><td style="background:#F5B921" title="토 20시 · 평소 보통"></td><td style="background:#3182F6" title="토 21시 · 평소 여유"></td><td style="background:#3182F6" title="토 22시 · 평소 여유"></td><td style="background:#3182F6" title="토 23시 · 평소 여유"></td></tr></tbody></table>
+  <div class="hx"><span>0시</span><span>6시</span><span>12시</span><span>18시</span><span>23시</span></div>
+  <div class="leg"><span><i style="background:#3182F6"></i>여유</span><span><i style="background:#F5B921"></i>보통</span><span><i style="background:#F57F2C"></i>약간붐빔</span><span><i style="background:#EF4B4B"></i>붐빔</span><span><i style="background:#E7ECF1"></i>표본 부족</span></div>
+ </div>
+ <a class="cta" id="ctaApp" href="https://play.google.com/store/apps/details?id=kr.hongdoc.hansanmap">한산맵 앱에서 실시간으로 보기</a>
+ <a class="cta2" href="kr.hongdoc.hansanmap://place?area=POI100&name=서울대공원">앱이 있다면 바로 열기</a>
+ <h2 style="margin-top:22px">근처 동네 혼잡도</h2>
+ <div class="near"><a href="../청계산/">청계산<span>2.9km</span></a><a href="../사당역/">사당역<span>5.3km</span></a><a href="../양재역/">양재역<span>5.6km</span></a><a href="../총신대입구(이수)역/">총신대입구(이수)역<span>6.1km</span></a><a href="../교대역/">교대역<span>6.3km</span></a><a href="../서리풀공원·몽마르뜨공원/">서리풀공원·몽마르뜨공원<span>6.6km</span></a></div>
+ <p class="src">출처: 서울시 실시간 도시데이터(현재 혼잡도) · 한산맵 자체 축적 실측 패턴(요일×시간, 최근 90일).
+ 평소 패턴은 자체 검증에서 실측과 86% 일치했습니다. 페이지 갱신 2026-08-17.</p>
+</div>
+<script>
+(function(){
+ var SB="https://zrvuucvjcmlcvhhvfzzd.supabase.co",ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpydnV1Y3ZqY21sY3ZoaHZmenpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMzQwNjIsImV4cCI6MjA5NjYxMDA2Mn0.PgwGvh1qS27t7AcepWtIm26MlZ6KkrplAOIMfRHgKFQ";
+ var RANKS=[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 0, 0, 0]];
+ var LVR={"여유":0,"보통":1,"약간붐빔":2,"붐빔":3};
+ function norm(l){return String(l==null?"":l).replace(/\s/g,"")}
+ // iOS 는 App Store 로(공유 착지와 동일 판별)
+ if(/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1))
+  document.getElementById("ctaApp").setAttribute("href","https://apps.apple.com/app/id6783810617");
+ fetch(SB+"/rest/v1/rpc/get_seoul_area_detail",{method:"POST",headers:{"Content-Type":"application/json",apikey:ANON,Authorization:"Bearer "+ANON},body:JSON.stringify({p_area_code:"POI100"})})
+ .then(function(r){return r.json()}).then(function(rows){
+  var row=rows&&rows[0]; if(!row||!row.congest_lvl)return;
+  var age=row.updated_at?Math.max(0,Math.round((Date.now()-new Date(row.updated_at).getTime())/60000)):null;
+  if(age!==null&&age>120)return; // 2시간 넘게 낡은 값은 '지금'으로 단정하지 않음(앱 규약)
+  var emo={"여유":"🟢","보통":"🟡","약간붐빔":"🟠","붐빔":"🔴"}[norm(row.congest_lvl)]||"⚪";
+  document.getElementById("liveLevel").textContent="지금 "+emo+" "+row.congest_lvl;
+  document.getElementById("liveTime").textContent=(age===null?"":age+"분 전 · ")+"서울시 실시간 도시데이터";
+  // 지금 vs 평소 이 시간(KST) — 정적으로 구운 평소 rank 와 비교
+  var k=new Date(Date.now()+9*36e5),d=k.getUTCDay(),h=k.getUTCHours();
+  var tr=RANKS[d][h],lr=LVR[norm(row.congest_lvl)];
+  if(tr>=0&&lr!==undefined){
+   var vs=lr<tr?"평소 이 시간보다 한산해요":lr>tr?"평소 이 시간보다 붐벼요":"평소 이 시간과 비슷해요";
+   document.getElementById("liveVs").textContent=vs;
+  }
+  document.getElementById("live").style.display="block";
+ }).catch(function(){});
+})();
+</script>
+</body>
+</html>
