@@ -1,0 +1,29 @@
+# 동네별 SEO 랜딩 주간 재빌드 — 획득 계획 L2의 '주 1회 재빌드' 규약을 무인화 (2026-08-20)
+#
+# 왜 이 저장소인가: 빌더는 표준 라이브러리 + anon 키(RLS 보호 공개 키)만 쓰는 자립형이고,
+# 산출물 소비처가 이 GitHub Pages 저장소뿐이다. 이 저장소는 public 이라 Actions 분 무료 —
+# 앱 저장소(사설, 월 2,000분)와 달리 분 소진 걱정이 없다.
+# KST 월요일 03:30 (트래픽 최저 시간대) = UTC 일요일 18:30.
+name: rebuild-places
+on:
+  schedule:
+    - cron: '30 18 * * 0'
+  workflow_dispatch:
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: 재빌드 (typicals 요일×시간 히트맵 갱신)
+        run: python3 scripts/build_place_pages.py .
+      - name: 변경 있으면 커밋·푸시 (GitHub Pages 가 자동 배포)
+        run: |
+          git config user.name "hansanmap-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && echo "변경 없음 — 커밋 생략" || {
+            git commit -m "auto: 주간 SEO 랜딩 재빌드 ($(date -u +%F))"
+            git push
+          }
