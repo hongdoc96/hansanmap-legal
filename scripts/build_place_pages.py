@@ -35,6 +35,16 @@ APPSTORE = "https://apps.apple.com/app/id6783810617"
 OG_IMAGE = f"{BASE}/og-image.png"
 
 
+def og_for(slug, have_cards):
+    """동네 카드가 있으면 그것, 없으면 공통 카드.
+
+    카드는 앱 저장소(scripts/make-og-image.py)에서 굽는다 — 폰트를 재배포하지 않으려고
+    이 워크플로에서는 만들지 않는다. 그래서 새 동네가 생기면 카드가 없을 수 있고,
+    그때 og:image 가 404 가 되지 않도록 폴백한다(2026-09-09 에 그 404 를 고쳤다).
+    """
+    return f"{BASE}/og/{urllib.parse.quote(slug)}.png" if slug in have_cards else OG_IMAGE
+
+
 def canon(slug):
     """색인용 절대 URL — 한글 경로를 퍼센트 인코딩한다.
 
@@ -93,10 +103,11 @@ def meters(la1, ln1, la2, ln2):
     return 2 * r * math.asin(min(1, math.sqrt(a)))
 
 
-def build_area(area, cells, neighbors, today_iso):
+def build_area(area, cells, neighbors, today_iso, have_cards=frozenset()):
     """한 동네 페이지 HTML. cells: {(dow,hour): (level, samples)}"""
     name, code = area["name"], area["code"]
     slug = slugify(name)
+    og = og_for(slug, have_cards)
 
     # 히트맵 셀 + 페이지 인라인 rank 표(라이브 '지금 vs 평소' 비교용)
     ranks_by_dow = [[-1] * 24 for _ in range(7)]
@@ -165,13 +176,13 @@ def build_area(area, cells, neighbors, today_iso):
 <meta property="og:title" content="{name} 혼잡도 — 지금 붐빌까?">
 <meta property="og:description" content="{desc}">
 <meta property="og:url" content="{canon(slug)}">
-<meta property="og:image" content="{OG_IMAGE}">
+<meta property="og:image" content="{og}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{name} 혼잡도 — 지금 붐빌까?">
 <meta name="twitter:description" content="{desc}">
-<meta name="twitter:image" content="{OG_IMAGE}">
+<meta name="twitter:image" content="{og}">
 <script type="application/ld+json">{jsonld}</script>
 <style>
  body{{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:#F4F6F8;color:#1B2733;margin:0}}
@@ -260,6 +271,10 @@ def main():
         os.path.dirname(__file__), "..", "..", "hansanmap-legal"
     )
     place_dir = os.path.join(out_root, "place")
+    og_dir = os.path.join(out_root, "og")
+    have_cards = frozenset(
+        f[:-4] for f in os.listdir(og_dir) if f.endswith(".png")
+    ) if os.path.isdir(og_dir) else frozenset()
     today_iso = datetime.now(timezone(timedelta(hours=9))).strftime("%Y-%m-%d")
 
     print("데이터 수신 중…")
@@ -299,7 +314,7 @@ def main():
             {"name": n["name"], "dist": (f"{n['d']/1000:.1f}km" if n["d"] >= 1000 else f"{round(n['d'])}m")}
             for n in near
         ]
-        slug, html = build_area(a, cells_by_area.get(a["code"], {}), neighbors, today_iso)
+        slug, html = build_area(a, cells_by_area.get(a["code"], {}), neighbors, today_iso, have_cards)
         d = os.path.join(place_dir, slug)
         os.makedirs(d, exist_ok=True)
         with open(os.path.join(d, "index.html"), "w") as f:
@@ -344,7 +359,8 @@ def main():
     with open(os.path.join(out_root, "robots.txt"), "w") as f:
         f.write(f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n")
 
-    print(f"생성 완료: 동네 {len(areas)}p + 허브 1p + sitemap({len(sitemap_urls)} url) + robots")
+    print(f"생성 완료: 동네 {len(areas)}p + 허브 1p + sitemap({len(sitemap_urls)} url) + robots"
+          f" · 동네 카드 {len(have_cards)}장 연결")
 
 
 if __name__ == "__main__":
