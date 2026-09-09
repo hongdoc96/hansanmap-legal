@@ -27,3 +27,5 @@ jobs:
             git commit -m "auto: 주간 SEO 랜딩 재빌드 ($(date -u +%F))"
             git push
           }
+      - name: 검색엔진에 색인 통보 (IndexNow — Bing·네이버·Seznam·Yandex)
+        run: python3 scripts/submit_indexnow.py .

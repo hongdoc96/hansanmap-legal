@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
   한산맵 공유 딥링크(§6.5) 랜딩 페이지.
-  호스팅 위치: https://hongdoc96.github.io/hansanmap/place/index.html
+  호스팅 위치: https://hongdoc96.github.io/hansanmap-legal/place/index.html
   - 앱 설치 + App Links 검증됨 → OS가 이 URL을 가로채 앱 상세로 직행(이 페이지는 안 보임).
   - 미설치/미검증 → 이 페이지 표시: 커스텀 스킴으로 앱 열기 시도 + 스토어 설치 링크.
 -->
@@ -11,16 +11,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>한산맵에서 열기</title>
   <!-- OG 태그(rank6) — 카톡/SNS 공유 시 카드 미리보기(맨 URL 방지). 무자본 유입의 최대 누수 수리.
-       ⚠️ og:image 는 행님이 GitHub Pages 에 og-image.png(1200×630 권장) 업로드 후 아래 URL 확인 필요. -->
+       og:image 는 저장소 루트의 og-image.png(1200×630, 앱 저장소 scripts/make-og-image.py 가 생성). -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="한산맵" />
   <meta property="og:title" content="한산맵 — 지금 여기 붐빌까?" />
   <meta property="og:description" content="서울 실시간 혼잡도로 지금 갈 곳을 5초 만에 결정하세요." />
-  <meta property="og:image" content="https://hongdoc96.github.io/hansanmap/og-image.png" />
-  <meta property="og:url" content="https://hongdoc96.github.io/hansanmap/place/" />
+  <meta property="og:image" content="https://hongdoc96.github.io/hansanmap-legal/og-image.png" />
+  <meta property="og:url" content="https://hongdoc96.github.io/hansanmap-legal/place/" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="한산맵 — 지금 여기 붐빌까?" />
   <meta name="twitter:description" content="서울 실시간 혼잡도로 지금 갈 곳을 5초 만에 결정하세요." />
+  <meta name="twitter:image" content="https://hongdoc96.github.io/hansanmap-legal/og-image.png" />
   <style>
     body { font-family: -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
            background: #F4F6F8; color: #1B2733; margin: 0; padding: 0;

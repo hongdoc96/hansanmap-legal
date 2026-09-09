@@ -20,6 +20,7 @@ import math
 import os
 import re
 import sys
+import urllib.parse
 import urllib.request
 from datetime import datetime, timezone, timedelta
 
@@ -29,6 +30,18 @@ ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp
 BASE = "https://hongdoc96.github.io/hansanmap-legal"
 PLAY = "https://play.google.com/store/apps/details?id=kr.hongdoc.hansanmap"
 APPSTORE = "https://apps.apple.com/app/id6783810617"
+# 공유 미리보기 카드 — scripts/make_og_image.py 가 굽는다.
+# 없으면 카톡·SNS 공유 시 이미지 없는 카드가 뜬다(2026-09-09 실측: 경로 오타로 404였다).
+OG_IMAGE = f"{BASE}/og-image.png"
+
+
+def canon(slug):
+    """색인용 절대 URL — 한글 경로를 퍼센트 인코딩한다.
+
+    sitemaps.org 규격이 loc 의 URL escape 를 요구한다. 브라우저는 raw 한글도 처리하지만
+    크롤러는 규격대로 읽으므로 canonical·og:url·sitemap 을 같은 인코딩 형태로 맞춘다.
+    """
+    return f"{BASE}/place/{urllib.parse.quote(slug)}/"
 
 LV_RANK = {"여유": 0, "보통": 1, "약간붐빔": 2, "붐빔": 3}
 LV_COLOR = {"여유": "#3182F6", "보통": "#F5B921", "약간붐빔": "#F57F2C", "붐빔": "#EF4B4B"}
@@ -146,12 +159,19 @@ def build_area(area, cells, neighbors, today_iso):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
 <meta name="description" content="{desc}">
-<link rel="canonical" href="{BASE}/place/{slug}/">
+<link rel="canonical" href="{canon(slug)}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="한산맵">
 <meta property="og:title" content="{name} 혼잡도 — 지금 붐빌까?">
 <meta property="og:description" content="{desc}">
-<meta property="og:url" content="{BASE}/place/{slug}/">
+<meta property="og:url" content="{canon(slug)}">
+<meta property="og:image" content="{OG_IMAGE}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{name} 혼잡도 — 지금 붐빌까?">
+<meta name="twitter:description" content="{desc}">
+<meta name="twitter:image" content="{OG_IMAGE}">
 <script type="application/ld+json">{jsonld}</script>
 <style>
  body{{font-family:-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:#F4F6F8;color:#1B2733;margin:0}}
@@ -284,7 +304,7 @@ def main():
         os.makedirs(d, exist_ok=True)
         with open(os.path.join(d, "index.html"), "w") as f:
             f.write(html)
-        sitemap_urls.append(f"{BASE}/place/{slug}/")
+        sitemap_urls.append(canon(slug))
 
     # 목록 허브(크롤 진입점) — place/all/ (기존 place/index.html 은 공유 착지라 건드리지 않는다)
     items = "".join(
@@ -297,6 +317,14 @@ def main():
 <title>서울 동네별 혼잡도 — 실시간·시간대별 {len(areas)}곳 | 한산맵</title>
 <meta name="description" content="서울 주요 {len(areas)}개 동네의 실시간 혼잡도와 평소 요일·시간대 패턴. 강남역, 홍대, 명동, 성수동 등.">
 <link rel="canonical" href="{BASE}/place/all/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="한산맵">
+<meta property="og:title" content="서울 동네별 혼잡도 {len(areas)}곳">
+<meta property="og:description" content="서울 주요 {len(areas)}개 동네의 실시간 혼잡도와 평소 요일·시간대 패턴.">
+<meta property="og:url" content="{BASE}/place/all/">
+<meta property="og:image" content="{OG_IMAGE}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="{OG_IMAGE}">
 <style>body{{font-family:-apple-system,"Apple SD Gothic Neo",sans-serif;background:#F4F6F8;color:#1B2733;margin:0}}
 .wrap{{max-width:560px;margin:0 auto;padding:20px 16px 48px}}h1{{font-size:22px}}
 .g{{display:grid;grid-template-columns:1fr 1fr;gap:8px}}
@@ -307,6 +335,7 @@ def main():
 <p style="font-size:11.5px;color:#8595A5;margin-top:18px">페이지 갱신 {today_iso}</p></div></body></html>
 """)
     sitemap_urls.append(f"{BASE}/place/all/")
+    sitemap_urls.append(f"{BASE}/")
 
     # sitemap.xml + robots.txt (레포 루트)
     urls_xml = "".join(f"<url><loc>{u}</loc><lastmod>{today_iso}</lastmod></url>" for u in sitemap_urls)
