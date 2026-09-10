@@ -329,7 +329,8 @@ def main():
 
     # 목록 허브(크롤 진입점) — place/all/ (기존 place/index.html 은 공유 착지라 건드리지 않는다)
     items = "".join(
-        f'<a href="../{slugify(a["name"])}/">{a["name"]}</a>' for a in sorted(areas, key=lambda x: x["name"])
+        f'<a href="../{slugify(a["name"])}/" data-c="{a["code"]}">{a["name"]}<span class="lv"></span></a>'
+        for a in sorted(areas, key=lambda x: x["name"])
     )
     os.makedirs(os.path.join(place_dir, "all"), exist_ok=True)
     with open(os.path.join(place_dir, "all", "index.html"), "w") as f:
@@ -349,11 +350,56 @@ def main():
 <style>body{{font-family:-apple-system,"Apple SD Gothic Neo",sans-serif;background:#F4F6F8;color:#1B2733;margin:0}}
 .wrap{{max-width:560px;margin:0 auto;padding:20px 16px 48px}}h1{{font-size:22px}}
 .g{{display:grid;grid-template-columns:1fr 1fr;gap:8px}}
-.g a{{background:#fff;border-radius:10px;padding:12px;text-decoration:none;color:#1B2733;font-size:13.5px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.05)}}</style>
+.g a{{background:#fff;border-radius:10px;padding:12px;text-decoration:none;color:#1B2733;font-size:13.5px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.05)}}
+.g .lv{{display:none;font-size:11.5px;font-weight:700;margin-top:4px}}
+.g .lv.on{{display:block}}
+.g .lv i{{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:0}}
+.ctaWhy{{font-size:13px;color:#5B6B7B;text-align:center;margin:22px 0 7px;line-height:1.5}}
+.cta{{display:block;text-align:center;background:#2F6BFF;color:#fff;text-decoration:none;font-weight:800;font-size:15px;border-radius:12px;padding:14px 0}}
+#liveNote{{display:none;font-size:12px;color:#8595A5;margin:9px 0 0}}</style>
 </head><body><div class="wrap"><h1>서울 동네별 혼잡도</h1>
 <p style="font-size:14px;color:#5B6B7B">실시간 혼잡도와 평소 요일·시간대 패턴 — 한산맵이 축적한 실측 데이터로 만듭니다.</p>
 <div class="g">{items}</div>
-<p style="font-size:11.5px;color:#8595A5;margin-top:18px">페이지 갱신 {today_iso}</p></div></body></html>
+<p id="liveNote"></p>
+<p class="ctaWhy">앱에서 별표해두면 그 동네가 한산해질 때 알려드려요</p>
+<a class="cta" id="ctaApp" href="{PLAY}">한산해지면 알림 받기</a>
+<p style="font-size:11.5px;color:#8595A5;margin-top:18px">페이지 갱신 {today_iso}</p></div>
+<script>
+(function(){{
+ var SB="{SB}",ANON="{ANON}";
+ if(/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1))
+  document.getElementById("ctaApp").setAttribute("href","{APPSTORE}");
+ var COL={{"여유":"#3182F6","보통":"#F5B921","약간붐빔":"#F57F2C","붐빔":"#EF4B4B"}};
+ function norm(l){{return String(l==null?"":l).replace(/\s/g,"")}}
+ // 목록은 정적으로 이름순이다(크롤러가 보는 순서). 라이브는 색과 등급만 입힌다 — 재정렬하지 않는다.
+ fetch(SB+"/rest/v1/rpc/list_seoul_area_status",{{method:"POST",headers:{{"Content-Type":"application/json",apikey:ANON,Authorization:"Bearer "+ANON}},body:"{{}}"}})
+ .then(function(r){{return r.json()}}).then(function(rows){{
+  if(!Array.isArray(rows))return;
+  var byCode={{}},newest=0;
+  rows.forEach(function(r){{
+   byCode[r.area_code]=r;
+   var t=r.updated_at?new Date(r.updated_at).getTime():0; if(t>newest)newest=t;
+  }});
+  // 2시간 넘게 낡은 값은 '지금'으로 단정하지 않는다(동네 페이지와 같은 규약).
+  if(!newest||Date.now()-newest>7200000)return;
+  var n=0;
+  document.querySelectorAll(".g a[data-c]").forEach(function(a){{
+   var row=byCode[a.getAttribute("data-c")]; if(!row)return;
+   var lv=norm(row.congestion_level),c=COL[lv]; if(!c)return;
+   var el=a.querySelector(".lv");
+   el.innerHTML='<i style="background:'+c+'"></i>'+row.congestion_level;
+   el.style.color=c; el.className="lv on"; n++;
+  }});
+  if(n){{
+   var m=Math.max(0,Math.round((Date.now()-newest)/60000));
+   var note=document.getElementById("liveNote");
+   note.textContent="지금 혼잡도 "+n+"곳 · "+m+"분 전 · 서울시 실시간 도시데이터";
+   note.style.display="block";
+  }}
+ }}).catch(function(){{}});
+}})();
+</script>
+</body></html>
 """)
     sitemap_urls.append(f"{BASE}/place/all/")
     sitemap_urls.append(f"{BASE}/")
