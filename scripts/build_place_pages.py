@@ -205,6 +205,8 @@ def build_area(area, cells, neighbors, today_iso, have_cards=frozenset()):
  .near{{display:grid;grid-template-columns:1fr 1fr;gap:8px}}
  .near a{{background:#fff;border-radius:10px;padding:11px 12px;text-decoration:none;color:#1B2733;font-size:13.5px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.05)}}
  .near a span{{display:block;font-weight:400;font-size:11.5px;color:#8595A5;margin-top:2px}}
+ #liveCta{{display:inline-block;margin:11px 0 0;font-size:13.5px;font-weight:800;color:#2F6BFF;text-decoration:none}}
+ .ctaWhy{{font-size:13px;color:#5B6B7B;text-align:center;margin:20px 0 7px;line-height:1.5}}
  .cta{{display:block;text-align:center;background:#2F6BFF;color:#fff;text-decoration:none;font-weight:800;font-size:15px;border-radius:12px;padding:14px 0;margin:18px 0 8px}}
  .cta2{{display:block;text-align:center;background:#EAF0F7;color:#2F6BFF;text-decoration:none;font-weight:700;font-size:14px;border-radius:12px;padding:12px 0}}
  .src{{font-size:11.5px;color:#8595A5;line-height:1.6;margin-top:18px}}
@@ -218,6 +220,7 @@ def build_area(area, cells, neighbors, today_iso, have_cards=frozenset()):
   <p id="liveLevel"></p>
   <p id="liveVs"></p>
   <p class="ts" id="liveTime"></p>
+  <a id="liveCta" href="{PLAY}">한산해지면 알림 받기 →</a>
  </div>
  <div class="card"><p class="sum">{summary}</p></div>
  <div class="card">
@@ -226,7 +229,8 @@ def build_area(area, cells, neighbors, today_iso, have_cards=frozenset()):
   <div class="hx"><span>0시</span><span>6시</span><span>12시</span><span>18시</span><span>23시</span></div>
   <div class="leg"><span><i style="background:#3182F6"></i>여유</span><span><i style="background:#F5B921"></i>보통</span><span><i style="background:#F57F2C"></i>약간붐빔</span><span><i style="background:#EF4B4B"></i>붐빔</span><span><i style="background:#E7ECF1"></i>표본 부족</span></div>
  </div>
- <a class="cta" id="ctaApp" href="{PLAY}">한산맵 앱에서 실시간으로 보기</a>
+ <p class="ctaWhy">앱에서 별표해두면 이 동네가 한산해질 때 알려드려요</p>
+ <a class="cta" id="ctaApp" href="{PLAY}">한산해지면 알림 받기</a>
  <a class="cta2" href="kr.hongdoc.hansanmap://place?area={code}&name={name}">앱이 있다면 바로 열기</a>
  <h2 style="margin-top:22px">근처 동네 혼잡도</h2>
  <div class="near">{near_html}</div>
@@ -241,7 +245,9 @@ def build_area(area, cells, neighbors, today_iso, have_cards=frozenset()):
  function norm(l){{return String(l==null?"":l).replace(/\\s/g,"")}}
  // iOS 는 App Store 로(공유 착지와 동일 판별)
  if(/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1))
-  document.getElementById("ctaApp").setAttribute("href","{APPSTORE}");
+  ["ctaApp","liveCta"].forEach(function(id){{
+   var el=document.getElementById(id); if(el) el.setAttribute("href","{APPSTORE}");
+  }});
  fetch(SB+"/rest/v1/rpc/get_seoul_area_detail",{{method:"POST",headers:{{"Content-Type":"application/json",apikey:ANON,Authorization:"Bearer "+ANON}},body:JSON.stringify({{p_area_code:"{code}"}})}})
  .then(function(r){{return r.json()}}).then(function(rows){{
   var row=rows&&rows[0]; if(!row||!row.congest_lvl)return;

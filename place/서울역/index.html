@@ -40,6 +40,8 @@
  .near{display:grid;grid-template-columns:1fr 1fr;gap:8px}
  .near a{background:#fff;border-radius:10px;padding:11px 12px;text-decoration:none;color:#1B2733;font-size:13.5px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.05)}
  .near a span{display:block;font-weight:400;font-size:11.5px;color:#8595A5;margin-top:2px}
+ #liveCta{display:inline-block;margin:11px 0 0;font-size:13.5px;font-weight:800;color:#2F6BFF;text-decoration:none}
+ .ctaWhy{font-size:13px;color:#5B6B7B;text-align:center;margin:20px 0 7px;line-height:1.5}
  .cta{display:block;text-align:center;background:#2F6BFF;color:#fff;text-decoration:none;font-weight:800;font-size:15px;border-radius:12px;padding:14px 0;margin:18px 0 8px}
  .cta2{display:block;text-align:center;background:#EAF0F7;color:#2F6BFF;text-decoration:none;font-weight:700;font-size:14px;border-radius:12px;padding:12px 0}
  .src{font-size:11.5px;color:#8595A5;line-height:1.6;margin-top:18px}
@@ -53,6 +55,7 @@
   <p id="liveLevel"></p>
   <p id="liveVs"></p>
   <p class="ts" id="liveTime"></p>
+  <a id="liveCta" href="https://play.google.com/store/apps/details?id=kr.hongdoc.hansanmap">한산해지면 알림 받기 →</a>
  </div>
  <div class="card"><p class="sum">평소 <b>화요일 13시</b>쯤이 가장 붐벼요 · <b>일요일 9시</b>쯤이 가장 한산해요</p></div>
  <div class="card">
@@ -61,12 +64,13 @@
   <div class="hx"><span>0시</span><span>6시</span><span>12시</span><span>18시</span><span>23시</span></div>
   <div class="leg"><span><i style="background:#3182F6"></i>여유</span><span><i style="background:#F5B921"></i>보통</span><span><i style="background:#F57F2C"></i>약간붐빔</span><span><i style="background:#EF4B4B"></i>붐빔</span><span><i style="background:#E7ECF1"></i>표본 부족</span></div>
  </div>
- <a class="cta" id="ctaApp" href="https://play.google.com/store/apps/details?id=kr.hongdoc.hansanmap">한산맵 앱에서 실시간으로 보기</a>
+ <p class="ctaWhy">앱에서 별표해두면 이 동네가 한산해질 때 알려드려요</p>
+ <a class="cta" id="ctaApp" href="https://play.google.com/store/apps/details?id=kr.hongdoc.hansanmap">한산해지면 알림 받기</a>
  <a class="cta2" href="kr.hongdoc.hansanmap://place?area=POI033&name=서울역">앱이 있다면 바로 열기</a>
  <h2 style="margin-top:22px">근처 동네 혼잡도</h2>
  <div class="near"><a href="../숭례문/">숭례문<span>775m</span></a><a href="../남대문시장/">남대문시장<span>834m</span></a><a href="../충정로역/">충정로역<span>837m</span></a><a href="../북창동-먹자골목/">북창동 먹자골목<span>1.0km</span></a><a href="../광화문·덕수궁/">광화문·덕수궁<span>1.3km</span></a><a href="../덕수궁길·정동길/">덕수궁길·정동길<span>1.3km</span></a></div>
  <p class="src">출처: 서울시 실시간 도시데이터(현재 혼잡도) · 한산맵 자체 축적 실측 패턴(요일×시간, 최근 90일).
- 평소 패턴은 자체 검증에서 실측과 86% 일치했습니다. 페이지 갱신 2026-09-09.</p>
+ 평소 패턴은 자체 검증에서 실측과 86% 일치했습니다. 페이지 갱신 2026-09-10.</p>
 </div>
 <script>
 (function(){
@@ -76,7 +80,9 @@
  function norm(l){return String(l==null?"":l).replace(/\s/g,"")}
  // iOS 는 App Store 로(공유 착지와 동일 판별)
  if(/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1))
-  document.getElementById("ctaApp").setAttribute("href","https://apps.apple.com/app/id6783810617");
+  ["ctaApp","liveCta"].forEach(function(id){
+   var el=document.getElementById(id); if(el) el.setAttribute("href","https://apps.apple.com/app/id6783810617");
+  });
  fetch(SB+"/rest/v1/rpc/get_seoul_area_detail",{method:"POST",headers:{"Content-Type":"application/json",apikey:ANON,Authorization:"Bearer "+ANON},body:JSON.stringify({p_area_code:"POI033"})})
  .then(function(r){return r.json()}).then(function(rows){
   var row=rows&&rows[0]; if(!row||!row.congest_lvl)return;
