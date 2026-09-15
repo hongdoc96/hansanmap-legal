@@ -96,6 +96,45 @@ def slugify(name):
     return re.sub(r"[\s/]+", "-", name.strip())
 
 
+AREAS_BEGIN = "/* AREAS:BEGIN */"
+AREAS_END = "/* AREAS:END */"
+
+
+def inject_landing_areas(place_dir, areas):
+    """공유 착지 페이지(place/index.html)에 동네 코드→[이름, slug] 표를 박는다.
+
+    🔴 왜 주입인가(2026-09-15): 착지 페이지가 제목을 URL 의 `name` 으로 쓰고 있었다.
+       `?area=POI054&name=홍대` 면 제목은 '홍대' 인데 그 아래 혼잡도 카드는 혜화역 값이다.
+       링크를 만드는 사람이 우리 브랜드·서울시 실데이터 위에 아무 문장이나 얹을 수 있었다.
+       이제 제목의 근거는 이 표뿐이고, 표의 출처는 서버(list_seoul_area_status)다.
+
+    ⚠️ slug 를 여기서 함께 굽는 이유: 착지 페이지가 정적 패턴 페이지로 링크를 거는데,
+       slugify 규칙을 JS 에 한 벌 더 쓰면 언젠가 갈려서 없는 경로로 보낸다.
+    """
+    path = os.path.join(place_dir, "index.html")
+    if not os.path.exists(path):
+        print("  ⚠️ 착지 페이지 없음 — 주입 생략")
+        return
+    with open(path, encoding="utf-8") as f:
+        html = f.read()
+    b, e = html.find(AREAS_BEGIN), html.find(AREAS_END)
+    if b < 0 or e < 0 or e < b:
+        raise SystemExit(f"착지 페이지에 {AREAS_BEGIN} … {AREAS_END} 펜스가 없다 — 주입할 자리가 사라졌다")
+    table = {a["code"]: [a["name"], slugify(a["name"])] for a in sorted(areas, key=lambda x: x["code"])}
+    body = json.dumps(table, ensure_ascii=False, separators=(",", ":"))
+    out = (
+        html[:b]
+        + AREAS_BEGIN
+        + "\n    var AREA_NAMES = "
+        + body
+        + ";\n    "
+        + html[e:]
+    )
+    with open(path, "w") as f:
+        f.write(out)
+    print(f"  착지 페이지 제목 표 주입: {len(table)}곳")
+
+
 def meters(la1, ln1, la2, ln2):
     r, t = 6371000, math.pi / 180
     dla, dln = (la2 - la1) * t, (ln2 - ln1) * t
@@ -327,7 +366,8 @@ def main():
             f.write(html)
         sitemap_urls.append(canon(slug))
 
-    # 목록 허브(크롤 진입점) — place/all/ (기존 place/index.html 은 공유 착지라 건드리지 않는다)
+    # 목록 허브(크롤 진입점) — place/all/
+    # (place/index.html 은 공유 착지라 본문은 손으로 관리하고, 제목 표만 펜스 사이에 주입한다)
     items = "".join(
         f'<a href="../{slugify(a["name"])}/" data-c="{a["code"]}">{a["name"]}<span class="lv"></span></a>'
         for a in sorted(areas, key=lambda x: x["name"])
@@ -401,6 +441,9 @@ def main():
 </script>
 </body></html>
 """)
+    # 공유 착지 페이지의 제목 근거 표(코드→[이름, slug]) 갱신 — 본문은 손으로 관리한다.
+    inject_landing_areas(place_dir, areas)
+
     sitemap_urls.append(f"{BASE}/place/all/")
     sitemap_urls.append(f"{BASE}/")
 
