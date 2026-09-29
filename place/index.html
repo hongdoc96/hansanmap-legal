@@ -101,12 +101,21 @@
       //   utm_* 는 Play Console 획득 보고서가 그대로 센다(공유로 온 설치 수).
       //   ⚠️ 모르는 코드는 싣지 않는다 — 제목과 같은 규약(AREA_NAMES 가 유일한 근거).
       //   ⚠️ App Store 는 설치 경로를 앱에 넘기지 않는다 — iOS 는 아래 안내 한 줄이 대신한다.
+      // 동네 코드 → [이름, slug]. **표에 실제로 있는 코드만** 준다.
+      // 🔴 `AREA_NAMES[a]` 로 바로 찾으면 `?area=constructor`·`toString`·`__proto__` 가 객체
+      //    프로토타입을 통과해 제목·안내가 'undefined'가 되고, Play 링크에 모르는 코드가 실렸다
+      //    (2026-09-29 독립 리뷰 L1). 형식(POI+3자리)과 자기 속성을 둘 다 본다 — **이중 방어**라
+      //    한쪽만 지워도 동작이 같다(돌연변이가 안 잡히는 것이 정상). 둘 다 지우면 verify_landing 이 잡는다.
+      function areaEntry(a) {
+        if (!a || !/^POI\d{3}$/.test(a)) return null;
+        return Object.prototype.hasOwnProperty.call(AREA_NAMES, a) ? AREA_NAMES[a] : null;
+      }
       var PLAY = 'https://play.google.com/store/apps/details?id=kr.hongdoc.hansanmap';
       function storeLinkFor(ios, search) {
         if (ios) return 'https://apps.apple.com/app/id6783810617';
         var p = new URLSearchParams(search);
         var a = p.get('area');
-        if (!a || !AREA_NAMES[a]) return PLAY;
+        if (!areaEntry(a)) return PLAY;
         var r = 'utm_source=hansan_share&utm_medium=landing&area=' + a;
         // 초대 귀속 토큰(V7) — 앱과 같은 형식(hex 12자)만 싣는다. 계측 속성일 뿐이라 없어도 착지는 한다.
         var ref = p.get('ref');
@@ -116,7 +125,7 @@
       // 설치 뒤 돌아오는 길 — 아는 동네 링크일 때만. 이름은 URL 이 아니라 표에서 온다(제목과 같다).
       function installHintFor(search) {
         var a = new URLSearchParams(search).get('area');
-        var k = a ? AREA_NAMES[a] : null;
+        var k = areaEntry(a);
         if (!k) return null;
         return "설치한 뒤 이 페이지로 돌아와 '앱에서 열기'를 누르면 " + k[0] + ' 화면이 바로 열려요.';
       }
@@ -228,7 +237,7 @@
         //   같은 규약이 이 파일 안에 이미 있었다 — 대안 목록은 URL 이 아니라 area_name 을 쓴다(위).
         //   동네(area)면 코드→이름은 빌드 시 박은 AREA_NAMES 가 유일한 근거다.
         //   ⚠️ 모르는 코드에서 URL 로 폴백하면 구멍이 그대로 남는다 — **이름을 지어내지 않는다.**
-        var known = area ? AREA_NAMES[area] : null;
+        var known = areaEntry(area);
         // 매장 링크는 area 가 없고 대조할 실데이터도 없다(라이브 카드도 안 뜬다).
         // 이름이 그것뿐이라 그대로 쓰되, 제목 자리를 길게 점유하지 못하게 다듬는다.
         var name = known ? known[0] : (area ? null : params.get('name'));

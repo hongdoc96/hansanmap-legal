@@ -15,7 +15,8 @@ if (!scripts.length) throw new Error("script 블록이 없다");
 const ANDROID_UA = 'Mozilla/5.0 (Linux; Android 14)';
 const IOS_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)';
 
-function run(search, ua = ANDROID_UA) {
+// noUSP — URLSearchParams 가 없는 구형 브라우저 흉내(자동 앱 열기가 그래도 도는지 본다).
+function run(search, ua = ANDROID_UA, { noUSP = false } = {}) {
   const els = {};
   const mk = () => ({ textContent: '한산맵에서 보기', style: {}, attrs: {},
                       setAttribute(k, v) { this.attrs[k] = v; },
@@ -27,7 +28,7 @@ function run(search, ua = ANDROID_UA) {
     window: { location: { search, set href(v) { sandbox.navigated = v; } } },
     navigator: { userAgent: ua, platform: ua === IOS_UA ? 'iPhone' : 'Linux', maxTouchPoints: 5 },
     fetch: () => new Promise(() => {}),   // 응답 없음 — 제목은 네트워크와 무관해야 한다
-    URLSearchParams, Date, Math, JSON, String, Number,
+    ...(noUSP ? {} : { URLSearchParams }), Date, Math, JSON, String, Number, Object,
   };
   const vm = require('vm');
   const ctx = vm.createContext(sandbox);
@@ -92,6 +93,21 @@ eq('모르는 코드엔 안내가 없다', run('?area=POI999').hint.style.displa
 eq('매장 링크엔 안내가 없다', run(`?name=${enc('우동집')}`).hint.style.display, undefined);
 eq('스토어 처리 뒤에도 자동 앱 열기는 그대로', run('?area=POI054').navigated,
    'kr.hongdoc.hansanmap://place?area=POI054');
+
+// 🔴 객체 프로토타입 키(2026-09-29 독립 리뷰 L1) — 표에 없는 이름이 'undefined'로 새지 않는다.
+for (const k of ['constructor', 'toString', '__proto__', 'hasOwnProperty']) {
+  const r = run(`?area=${k}`);
+  eq(`?area=${k} — 제목을 지어내지 않는다`, r.title, '한산맵에서 보기');
+  eq(`?area=${k} — Play 에 싣지 않는다`, r.store, PLAY);
+  eq(`?area=${k} — 안내가 없다`, r.hint.style.display, undefined);
+  eq(`?area=${k} — 평소 패턴 링크가 없다`, r.more.style.display, undefined);
+}
+eq('토큰은 정확히 12자 — 13자는 싣지 않는다', run(`?area=POI054&ref=${REF}0`).store,
+   PLAY + '&referrer=' + enc('utm_source=hansan_share&utm_medium=landing&area=POI054'));
+// URLSearchParams 가 없는 구형 브라우저 — 스토어 버튼 처리가 던져도 자동 앱 열기는 돈다.
+eq('구형 브라우저에서도 자동 앱 열기', run('?area=POI054', ANDROID_UA, { noUSP: true }).navigated,
+   'kr.hongdoc.hansanmap://place?area=POI054');
+eq('구형 브라우저 iOS 는 App Store 로', run('?area=POI054', IOS_UA, { noUSP: true }).store, APPSTORE);
 
 console.log(fail ? `\n🔴 ${fail}건 실패` : '\n전부 통과');
 process.exit(fail ? 1 : 0);

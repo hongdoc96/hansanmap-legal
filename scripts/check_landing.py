@@ -23,7 +23,7 @@ import sys
 
 BEGIN, END = "/* AREAS:BEGIN */", "/* AREAS:END */"
 # ④ 의 앵커 — 값이 URL 이 아니라 표에서 온다는 것, 그리고 URL 폴백이 area 부재로 막혀 있다는 것.
-KNOWN_ANCHOR = "var known = area ? AREA_NAMES[area] : null;"
+KNOWN_ANCHOR = "var known = areaEntry(area);"
 URL_NAME_GUARDED = "(area ? null : params.get('name'))"
 TITLE_ANCHOR = "document.getElementById('title').textContent"
 
@@ -32,7 +32,7 @@ def strip_comments(src):
     """`//` 주석을 **줄 끝까지** 지운다 — 줄 머리든 줄 끝이든.
 
     ⚠️ 줄 머리만 지우면 부족하다. 자체 검증에서 실제로 뚫렸다 —
-       `var known = null; // var known = area ? AREA_NAMES[area] : null;` 는
+       `var known = null; // var known = areaEntry(area);` 는
        앵커가 주석 쪽에서 매치돼 검사를 그대로 통과했다(원본을 지운 게 아니라 옮긴 것이다).
     ⚠️ 그렇다고 `//` 를 무조건 자르면 URL 이 잘린다(`https://…`, `kr.hongdoc.hansanmap://place`).
        둘 다 바로 앞이 `:` 라 그 경우만 건너뛴다.
