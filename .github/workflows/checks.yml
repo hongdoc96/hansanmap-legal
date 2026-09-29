@@ -1,0 +1,44 @@
+# PR·푸시마다 계약 검사 — 주간 재빌드만 검사를 돌리면 손으로 고친 템플릿·페이지의 결함이
+# 다음 월요일 새벽에야 드러난다(그때는 이미 배포돼 있다). 네트워크 없이 돈다.
+name: checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # 산출물이 현재 템플릿과 일치하는가 — 빌더를 고치고 페이지를 다시 굽지 않았으면(또는 생성물을
+      # 손으로 고쳤으면) 여기서 갈린다. 오프라인 재빌드는 데이터를 새로 받지 않으므로 결과가 같아야 한다.
+      - name: 산출물 ↔ 템플릿 멱등성 (오프라인 재빌드 후 diff 없음)
+        run: |
+          python3 scripts/build_place_pages.py . --offline
+          git diff --stat --exit-code
+      - name: 착지 페이지 계약
+        run: |
+          python3 scripts/check_landing.py .
+          python3 scripts/check_landing.py . --self-test
+          node scripts/verify_landing.js place/index.html
+      - name: 동네 페이지 계약
+        run: |
+          python3 scripts/check_places.py .
+          python3 scripts/check_places.py . --self-test
+          node scripts/verify_place.js .
+  # 사람이 main 에 머지한 변경을 검색엔진에 알린다 — 주간 재빌드는 그날 자기가 바꾼 것만 알리고,
+  # 봇 푸시(GITHUB_TOKEN)는 다른 워크플로를 깨우지 않으므로 두 통보가 겹치지 않는다.
+  indexnow:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: contracts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: 푸시 전 sitemap 대비 바뀐 URL 만 IndexNow 통보
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          git show "$BEFORE:sitemap.xml" > "$RUNNER_TEMP/prev-sitemap.xml" 2>/dev/null || : > "$RUNNER_TEMP/prev-sitemap.xml"
+          python3 scripts/submit_indexnow.py . --changed-vs "$RUNNER_TEMP/prev-sitemap.xml"

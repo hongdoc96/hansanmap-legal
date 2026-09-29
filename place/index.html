@@ -10,6 +10,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>한산맵에서 열기</title>
+  <!-- 색인 제외(2026-09-29): 쿼리마다 같은 껍데기에 앱 스킴 자동 이동까지 하는 착지다. 검색에 걸려야 할
+       본문은 동네 페이지(place/<동네>/)에 있다 — 동네 페이지 빵부스러기가 여기로 새던 것도 함께 고쳤다. -->
+  <meta name="robots" content="noindex" />
   <!-- OG 태그(rank6) — 카톡/SNS 공유 시 카드 미리보기(맨 URL 방지). 무자본 유입의 최대 누수 수리.
        og:image 는 저장소 루트의 og-image.png(1200×630, 앱 저장소 scripts/make-og-image.py 가 생성). -->
   <meta property="og:type" content="website" />
@@ -179,9 +182,12 @@
             var next = pts[i + 1];
             if (next && (next.rank === undefined || next.rank >= myRank)) continue;
             // 시각은 KST 고정 — 브라우저 시간대가 어디든 서울 벽시계로 읽혀야 한다.
-            var kst = new Date(pts[i].at.getTime() + 9 * 3600 * 1000);
+            // 12시간 예측이라 자정을 넘길 수 있다 — 밤 10시에 '3시 이후'는 오후로 읽힌다. 날이 바뀌면 '내일'.
+            var KST = 9 * 3600 * 1000, DAY = 86400000;
+            var kst = new Date(pts[i].at.getTime() + KST);
+            var tomorrow = Math.floor(kst.getTime() / DAY) > Math.floor((Date.now() + KST) / DAY);
             var el = document.getElementById('liveEase');
-            el.textContent = kst.getUTCHours() + '시 이후 풀릴 것으로 예상돼요';
+            el.textContent = (tomorrow ? '내일 ' : '') + kst.getUTCHours() + '시 이후 풀릴 것으로 예상돼요';
             el.style.display = 'block';
             return;
           }

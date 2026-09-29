@@ -18,13 +18,18 @@ jobs:
       - uses: actions/checkout@v4
       - name: 재빌드 (typicals 요일×시간 히트맵 갱신)
         run: python3 scripts/build_place_pages.py .
-      # 착지 페이지 계약 — 제목이 URL 이 아니라 주입된 표를 근거로 삼는가.
-      # 여기서 실패하면 커밋하지 않는다(위조 가능한 제목을 배포하느니 옛 페이지가 낫다).
+      # 계약 — 여기서 실패하면 커밋하지 않는다(거짓 문장·위조 가능한 제목·막다른 링크를 배포하느니
+      # 옛 페이지가 낫다). 같은 검사를 PR 마다 checks.yml 이 돌린다.
       - name: 착지 페이지 계약 검사
         run: |
           python3 scripts/check_landing.py .
           python3 scripts/check_landing.py . --self-test
           node scripts/verify_landing.js place/index.html
+      - name: 동네 페이지 계약 검사 (주장 ↔ 히트맵 대조 · 링크 · 색인 여부)
+        run: |
+          python3 scripts/check_places.py .
+          python3 scripts/check_places.py . --self-test
+          node scripts/verify_place.js .
       - name: 변경 있으면 커밋·푸시 (GitHub Pages 가 자동 배포)
         run: |
           git config user.name "hansanmap-bot"
@@ -34,5 +39,6 @@ jobs:
             git commit -m "auto: 주간 SEO 랜딩 재빌드 ($(date -u +%F))"
             git push
           }
+      # 오늘(KST) 바뀐 URL 만 — 빌더가 내용이 그대로인 페이지의 lastmod 를 유지한다.
       - name: 검색엔진에 색인 통보 (IndexNow — Bing·네이버·Seznam·Yandex)
-        run: python3 scripts/submit_indexnow.py .
+        run: python3 scripts/submit_indexnow.py . --since "$(TZ=Asia/Seoul date +%F)"
