@@ -12,7 +12,7 @@ from urllib.parse import unquote, urlsplit
 from xml.etree import ElementTree
 
 
-# 안전 안내가 가리키는 2025 지정 장소와 대응 범위를 독립적으로 고정한다.
+# 서울시 2026 공식 발표의 14곳과 기존 동네 대응 범위를 독립적으로 고정한다.
 EXPECTED = {
     "POI004": ("이태원 관광특구", "same"),
     "POI007": ("홍대 관광특구", "same"),
@@ -25,7 +25,7 @@ EXPECTED = {
     "POI071": ("압구정 로데오거리", "same"),
     "POI003": ("명동거리", "contains"),
     "POI037": ("논현역", "contains"),
-    "POI015": ("건대 맛의 거리", "adjacent"),
+    "POI015": ("건대 맛의거리", "adjacent"),
     "POI040": ("신촌 연세로", "adjacent"),
     "POI031": ("샤로수길", "adjacent"),
 }
@@ -73,15 +73,20 @@ def check(root):
     assert page.meta["og:url"] == page.canonical[0], "공유 URL과 canonical이 다르다"
     image = page.meta["og:image"]
     assert image == f"{BASE}/og-image.png" and (root / "og-image.png").is_file(), "공유 이미지 404"
-    assert "서울시 2025 지정 기준" in source and "2026년 공식 발표가 나오면 갱신" in source
+    assert source.count("서울시 2026 관리대상") == 5, "2026 목록의 연도·메타 출처가 다르다"
+    assert source.count("2026년 10월 22일 공식 발표 기준") == 1, "공식 발표일이 없다"
+    assert source.count('href="https://mediahub.seoul.go.kr/archives/2019819"') == 1, "2026 서울시 본문 출처가 없다"
+    assert source.count("서울시 2025 지정 기준") == 0, "지난해 목록으로 잘못 소개한다"
     assert "인접" in source and "거리 자체의 혼잡도가 아니에요" in source
     assert "현장 통제와 공식 안내가 우선" in source
-    assert "20251024500177" in source, "2025 목록 출처가 없다"
+    assert source.count("중점관리 8곳·안전관리 6곳") == 1, "공식 관리대상 구분이 없다"
     assert not re.search(r"fetch\s*\(|eyJ[A-Za-z0-9_-]+\.|지금 안전", source), "정적 안전 안내에 실시간 값/키를 넣지 않는다"
     hub = (root / "place/all/index.html").read_text(encoding="utf-8")
     assert hub.count(f'href="../{SLUG}/"') == 1, "허브 입구는 하나여야 한다"
+    assert hub.count("서울시 2026 관리대상") == 1, "허브의 목록 연도가 다르다"
     builder = (root / "scripts/build_place_pages.py").read_text(encoding="utf-8")
     assert builder.count(f'href="../{SLUG}/"') == 1, "자동 재빌드가 입구를 지운다"
+    assert builder.count("서울시 2026 관리대상") == 1, "재빌드하면 지난해 연도로 되돌아간다"
     urls = [n.text for n in ElementTree.parse(root / "sitemap.xml").iter() if n.tag.endswith("}loc")]
     assert urls.count(page.canonical[0]) == 1, "사이트맵 누락/중복"
     assert f'canon("{SLUG}")' in builder, "자동 재빌드가 사이트맵에서 지운다"
@@ -95,7 +100,7 @@ def self_test(root):
     mutations = {
         "동네 출구 삭제": re.sub(r"    <li>.*?data-area=\"POI004\".*?</li>\n", "", original),
         "인접을 같은 곳으로 상수화": original.replace('data-relation="adjacent"', 'data-relation="same"'),
-        "출처를 2026으로 상수화": original.replace("서울시 2025 지정 기준", "서울시 2026 지정 기준"),
+        "출처를 2025로 상수화": original.replace("서울시 2026 관리대상", "서울시 2025 지정 기준"),
     }
     with tempfile.TemporaryDirectory(prefix="hansan-halloween-check-") as tmp:
         target = Path(tmp)
