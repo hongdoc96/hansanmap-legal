@@ -400,6 +400,7 @@ def main():
 </head><body><div class="wrap"><h1>서울 동네별 혼잡도</h1>
 <p style="font-size:14px;color:#5B6B7B">실시간 혼잡도와 평소 요일·시간대 패턴 — 한산맵이 축적한 실측 데이터로 만듭니다.</p>
 <p><a href="../핼러윈-안전안내/">핼러윈 주말 인파 확인 · 서울시 2026 관리대상 →</a></p>
+<p><a href="../가을-나들이/">가을 나들이 — 공원·고궁 혼잡도 확인 →</a></p>
 <div class="g">{items}</div>
 <p id="liveNote"></p>
 <p class="ctaWhy">앱에서 별표해두면 그 동네가 한산해질 때 알려드려요</p>
@@ -447,6 +448,7 @@ def main():
 
     sitemap_urls.append(f"{BASE}/place/all/")
     sitemap_urls.append(canon("핼러윈-안전안내"))
+    sitemap_urls.append(canon("가을-나들이"))
     sitemap_urls.append(f"{BASE}/")
 
     # sitemap.xml + robots.txt (레포 루트)

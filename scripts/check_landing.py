@@ -19,6 +19,7 @@
 import json
 import os
 import re
+import urllib.parse
 import sys
 
 BEGIN, END = "/* AREAS:BEGIN */", "/* AREAS:END */"
@@ -105,6 +106,16 @@ def check(root):
         halloween = f.read()
     assert halloween.count('id="seasonStatus"') == 1, "핼러윈 기간 안내가 없다"
     assert '기간 밖에는 지난 안내입니다.' in halloween, "스크립트 미실행 시 지난 안내를 구분하지 못한다"
+
+    with open(os.path.join(root, "place", "가을-나들이", "index.html"), encoding="utf-8") as f:
+        autumn = f.read()
+    codes = re.findall(r'data-area="(POI\d+)"', autumn)
+    assert len(codes) >= 10 and len(codes) == len(set(codes)), "가을 동네 목록이 없거나 중복됐다"
+    assert all(code in table for code in codes), "가을 목록에 없는 동네 코드가 있다"
+    assert "단풍 상태를 제공하지 않습니다" in autumn, "단풍 상태와 혼잡도를 구분해야 한다"
+    for href in re.findall(r'href="(\.\./[^"?#]+/)"', autumn):
+        target = os.path.normpath(os.path.join(root, "place", "가을-나들이", urllib.parse.unquote(href), "index.html"))
+        assert os.path.isfile(target), "가을 페이지의 동네 링크가 없다: " + href
 
     return len(table)
 
