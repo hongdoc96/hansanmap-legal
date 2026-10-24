@@ -109,5 +109,43 @@ eq('구형 브라우저에서도 자동 앱 열기', run('?area=POI054', ANDROID
    'kr.hongdoc.hansanmap://place?area=POI054');
 eq('구형 브라우저 iOS 는 App Store 로', run('?area=POI054', IOS_UA, { noUSP: true }).store, APPSTORE);
 
+// 실제 계절 안내 스크립트를 고정 시계로 실행해 열린 페이지도 종료 시각에 바뀌는지 본다.
+function halloweenAt(instant) {
+  const path = require('path');
+  const seasonal = fs.readFileSync(path.join(path.dirname(process.argv[2]), '핼러윈-안전안내/index.html'), 'utf8');
+  const blocks = [...seasonal.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
+  let now = Date.parse(instant);
+  const elements = {};
+  const events = {};
+  let timer;
+  const document = { title: '', hidden: false,
+    getElementById(id) { return elements[id] ||= { textContent: '' }; },
+    addEventListener(type, fn) { events[type] = fn; } };
+  class Clock extends Date { static now() { return now; } }
+  const ctx = require('vm').createContext({ document, Date: Clock, Math,
+    window: { addEventListener(type, fn) { events[type] = fn; } },
+    setTimeout(fn) { timer = fn; return 1; }, clearTimeout() { timer = undefined; } });
+  for (const script of blocks) require('vm').runInContext(script, ctx);
+  return { elements, document, advance(instant, event) {
+    now = Date.parse(instant);
+    if (event) events[event]?.(); else timer?.();
+  } };
+}
+const halloween = halloweenAt('2026-11-01T23:59:59+09:00');
+eq('핼러윈 종료 직전에는 안내 기간', halloween.elements.seasonStatus?.textContent,
+   '2026 안내 기간: 10월 23일~11월 1일 · 현장 통제와 공식 안내가 우선입니다.');
+halloween.advance('2026-11-02T00:00:00+09:00');
+eq('열어 둔 핼러윈 페이지도 KST 자정에 종료', halloween.elements.seasonStatus?.textContent,
+   '올해 안내 기간이 끝났어요 · 현장 통제와 공식 안내가 우선입니다.');
+eq('종료 뒤 제목도 지난 안내라고 말한다', halloween.document.title,
+   '2026 핼러윈 안내 기간 종료 | 한산맵');
+const afterHalloween = halloweenAt('2026-11-02T00:00:00+09:00');
+eq('종료 뒤 처음 열어도 종료 안내', afterHalloween.elements.seasonHeading?.textContent,
+   '2026 핼러윈 안내 기간이 끝났어요');
+const resumedHalloween = halloweenAt('2026-11-01T23:00:00+09:00');
+resumedHalloween.advance('2026-11-02T08:00:00+09:00', 'visibilitychange');
+eq('잠자던 페이지 복귀도 지난 안내로 갱신', resumedHalloween.elements.seasonStatus?.textContent,
+   '올해 안내 기간이 끝났어요 · 현장 통제와 공식 안내가 우선입니다.');
+
 console.log(fail ? `\n🔴 ${fail}건 실패` : '\n전부 통과');
 process.exit(fail ? 1 : 0);

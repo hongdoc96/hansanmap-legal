@@ -100,6 +100,12 @@ def check(root):
     assert i_title >= 0, "제목 대입부를 찾지 못했다"
     assert i_known < i_title, "제목을 정하기 전에 표를 보지 않는다"
 
+    # 계절 안내는 자바스크립트가 없어도 기간을 명시하고, 종료 갱신 노드를 유지한다.
+    with open(os.path.join(root, "place", "핼러윈-안전안내", "index.html"), encoding="utf-8") as f:
+        halloween = f.read()
+    assert halloween.count('id="seasonStatus"') == 1, "핼러윈 기간 안내가 없다"
+    assert '기간 밖에는 지난 안내입니다.' in halloween, "스크립트 미실행 시 지난 안내를 구분하지 못한다"
+
     return len(table)
 
 

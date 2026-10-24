@@ -27,7 +27,8 @@
 </head>
 <body><main>
   <nav aria-label="현재 위치"><a href="../../">한산맵</a><a href="../all/">서울 동네 전체 보기</a></nav>
-  <h1>핼러윈 주말, 붐비는 곳은 미리 확인하고 피해 가세요</h1>
+  <h1 id="seasonHeading">핼러윈 주말, 붐비는 곳은 미리 확인하고 피해 가세요</h1>
+  <p id="seasonStatus" class="source" role="status">2026 안내 기간: 10월 23일~11월 1일 · 기간 밖에는 지난 안내입니다.</p>
   <p class="source">서울시 2026 관리대상 · 2026년 10월 22일 공식 발표 기준입니다.</p>
   <p>사람이 몰리기 쉬운 동네를 확인하고, 붐비면 다른 장소나 시간을 고르세요. 아래 링크에서 서울시 도시데이터의 관측 시각과 혼잡도를 확인할 수 있어요. 약 30분 전 관측일 수 있어 현장 상황과 다를 수 있습니다.</p>
   <aside class="safety" aria-label="안전 안내"><strong>현장 통제와 공식 안내가 우선입니다.</strong>경찰·자치구 안전요원의 안내를 따르세요. 사람이 너무 많으면 밀집 구역에서 벗어나세요. 위급하면 <a href="tel:112">112</a>·<a href="tel:119">119</a>로 연락하세요.</aside>
@@ -57,5 +58,32 @@
     <div class="stores"><a href="https://apps.apple.com/app/id6783810617">iPhone 앱 설치</a><a href="https://play.google.com/store/apps/details?id=kr.hongdoc.hansanmap&amp;referrer=utm_source%3Dhansan_share%26utm_medium%3Dseo">Android 앱 설치</a></div>
     <a href="../all/">다른 동네와 시간도 확인하기 →</a>
   </footer>
-</main></body>
+</main>
+<script>
+  // 재빌드를 기다리지 않고 한국 시각 종료와 페이지 복귀에 지난 안내임을 알립니다.
+  (function () {
+    var end = Date.parse('2026-11-02T00:00:00+09:00');
+    var timer;
+    function updateSeason() {
+      clearTimeout(timer);
+      var remaining = end - Date.now();
+      var ended = remaining <= 0;
+      document.getElementById('seasonStatus').textContent = ended
+        ? '올해 안내 기간이 끝났어요 · 현장 통제와 공식 안내가 우선입니다.'
+        : '2026 안내 기간: 10월 23일~11월 1일 · 현장 통제와 공식 안내가 우선입니다.';
+      if (ended) {
+        document.getElementById('seasonHeading').textContent = '2026 핼러윈 안내 기간이 끝났어요';
+        document.title = '2026 핼러윈 안내 기간 종료 | 한산맵';
+      } else {
+        timer = setTimeout(updateSeason, Math.min(remaining, 2147483647));
+      }
+    }
+    updateSeason();
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) updateSeason();
+    });
+    window.addEventListener('pageshow', updateSeason);
+  }());
+</script>
+</body>
 </html>
