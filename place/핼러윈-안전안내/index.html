@@ -21,7 +21,7 @@
     nav{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}nav a{padding:.5rem 0}h1{font-size:clamp(1.65rem,6vw,2.1rem);line-height:1.4;margin:1.75rem 0 .75rem;word-break:keep-all}h2{font-size:1.25rem;margin:2rem 0 .5rem}
     p{margin:.5rem 0 1rem}.source{color:var(--muted)}.safety{padding:1rem;background:var(--paper);border:1px solid var(--line)}.safety strong{display:block;margin-bottom:.25rem}
     ul{padding:0;list-style:none;margin:1rem 0}li{border-top:1px solid var(--line)}li:last-child{border-bottom:1px solid var(--line)}li a{display:block;padding:1rem .25rem;min-height:3rem;text-decoration:none}li a:hover .name{text-decoration:underline}.name{font-weight:700;text-decoration:underline}.range{display:block;color:var(--muted);margin-top:.2rem}.stores{display:flex;gap:1rem;flex-wrap:wrap}.stores a{display:inline-block;padding:.75rem 0;min-height:3rem}
-    footer{border-top:1px solid var(--line);margin-top:2rem;padding-top:1rem}::selection{background:#b9d2ff;color:#13253f}
+    footer{border-top:1px solid var(--line);margin-top:2rem;padding-top:1rem}::selection{background:#b9d2ff;color:#13253f}.live-reading{display:block;color:var(--muted);margin-top:.3rem;overflow-wrap:anywhere}[hidden]{display:none!important}
     @media(prefers-color-scheme:dark){:root{--bg:#151b23;--ink:#f0f3f7;--muted:#b8c5d6;--line:#465568;--link:#a4c4ff;--visited:#d1b4f2;--paper:#202a36}}
   </style>
 </head>
@@ -32,6 +32,11 @@
   <p class="source">서울시 2026 관리대상 · 2026년 10월 22일 공식 발표 기준입니다.</p>
   <p>사람이 몰리기 쉬운 동네를 확인하고, 붐비면 다른 장소나 시간을 고르세요. 아래 링크에서 서울시 도시데이터의 관측 시각과 혼잡도를 확인할 수 있어요. 약 30분 전 관측일 수 있어 현장 상황과 다를 수 있습니다.</p>
   <aside class="safety" aria-label="안전 안내"><strong>현장 통제와 공식 안내가 우선입니다.</strong>경찰·자치구 안전요원의 안내를 따르세요. 사람이 너무 많으면 밀집 구역에서 벗어나세요. 위급하면 <a href="tel:112">112</a>·<a href="tel:119">119</a>로 연락하세요.</aside>
+  <section id="seasonLive" data-order="busy" data-ends-at="2026-11-02T00:00:00+09:00" aria-labelledby="liveHeading">
+    <h2 id="liveHeading">동네의 지금 상태</h2>
+    <p class="source">서울시 실시간 도시데이터 · 약 30분 전 기준입니다. 90분을 넘긴 자료는 등급을 숨깁니다. 현장 통제·공식 안내가 우선입니다.</p>
+    <p id="seasonLiveMessage" role="status">아래 동네 링크에서 관측 시각과 혼잡도를 확인하세요.</p>
+  </section>
   <h2>서울시 2026 관리대상 14곳</h2>
   <p>중점관리 8곳·안전관리 6곳입니다. 서울시 특별대책기간은 10월 23일~11월 1일이며, 집중관리기간은 10월 30일~11월 1일입니다.</p>
   <p>‘포함’은 더 넓은 동네, ‘인접’은 옆 동네의 값이에요. 인접 동네의 값은 해당 거리 자체의 혼잡도가 아니에요. 이 목록은 2026년 행사 개최·안전 여부를 뜻하지 않습니다.</p>
@@ -85,5 +90,7 @@
     window.addEventListener('pageshow', updateSeason);
   }());
 </script>
+<script src="../public-client.js" defer></script>
+<script src="../season-live.js" defer></script>
 </body>
 </html>

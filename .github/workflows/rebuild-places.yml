@@ -25,6 +25,7 @@ jobs:
           python3 scripts/check_landing.py .
           python3 scripts/check_landing.py . --self-test
           node scripts/verify_landing.js place/index.html
+          node scripts/verify_season_live.js
           python3 scripts/check_halloween.py . --self-test
       - name: 변경 있으면 커밋·푸시 (GitHub Pages 가 자동 배포)
         run: |

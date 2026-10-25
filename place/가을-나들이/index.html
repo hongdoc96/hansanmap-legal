@@ -20,7 +20,7 @@
     nav,.stores{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}nav a,.stores a{padding:.75rem 0;min-height:3rem}
     h1{font-size:clamp(1.65rem,6vw,2.1rem);line-height:1.4;margin:1.75rem 0 .75rem;word-break:keep-all}h2{font-size:1.25rem;margin:2rem 0 .5rem}
     p{margin:.5rem 0 1rem}.note{color:var(--muted)}.guide{padding:1rem;background:var(--paper);border:1px solid var(--line)}
-    ul{padding:0;list-style:none;margin:1rem 0}li{border-top:1px solid var(--line)}li:last-child{border-bottom:1px solid var(--line)}li a{display:block;padding:1rem .25rem;min-height:3rem}footer{border-top:1px solid var(--line);margin-top:2rem;padding-top:1rem}
+    ul{padding:0;list-style:none;margin:1rem 0}li{border-top:1px solid var(--line)}li:last-child{border-bottom:1px solid var(--line)}li a{display:block;padding:1rem .25rem;min-height:3rem}footer{border-top:1px solid var(--line);margin-top:2rem;padding-top:1rem}.live-reading{display:block;color:var(--muted);margin-top:.3rem;overflow-wrap:anywhere}[hidden]{display:none!important}
     @media(prefers-color-scheme:dark){:root{--bg:#151b23;--ink:#f0f3f7;--muted:#b8c5d6;--line:#465568;--link:#a4c4ff;--paper:#202a36}}
   </style>
 </head>
@@ -29,8 +29,13 @@
   <h1>가을 나들이, 공원·고궁의 혼잡도부터 확인하세요</h1>
   <p>가려는 동네를 누르면 관측 시각과 혼잡도, 평소 시간대 패턴을 함께 볼 수 있어요. 붐비면 다른 동네나 시간을 고르세요.</p>
   <aside class="guide"><strong>단풍 상태를 제공하지 않습니다.</strong><p>여기서는 서울시 도시데이터의 동네 혼잡도만 안내합니다. 약 30분 전 관측일 수 있으며, 오래된 자료는 현재 상황이 아닙니다. 공원 전체·궁궐 내부·개별 출입구의 혼잡도와도 다를 수 있어요.</p></aside>
-  <h2>공원과 산책 동네</h2>
-  <ul aria-label="공원 동네 혼잡도">
+  <section id="seasonLive" data-order="quiet" aria-labelledby="liveHeading">
+    <h2 id="liveHeading">공원·고궁 동네의 지금 상태</h2>
+    <p class="note">서울시 실시간 도시데이터 · 약 30분 전 기준입니다. 90분을 넘긴 자료는 등급을 숨깁니다.</p>
+    <p id="seasonLiveMessage" role="status">아래 동네 링크에서 관측 시각과 혼잡도를 확인하세요.</p>
+  </section>
+  <p class="note">휴궁일·입장 시간과 현장 통제는 방문 전 각 시설의 공식 안내를 확인하세요.</p>
+  <ul aria-label="공원 고궁 문화유산 동네 혼잡도">
     <li><a href="../서울숲공원/" data-area="POI101">서울숲공원 혼잡도 확인 →</a></li>
     <li><a href="../남산공원/" data-area="POI091">남산공원 혼잡도 확인 →</a></li>
     <li><a href="../북서울꿈의숲/" data-area="POI096">북서울꿈의숲 혼잡도 확인 →</a></li>
@@ -41,16 +46,15 @@
     <li><a href="../여의도한강공원/" data-area="POI105">여의도한강공원 혼잡도 확인 →</a></li>
     <li><a href="../반포한강공원/" data-area="POI095">반포한강공원 혼잡도 확인 →</a></li>
     <li><a href="../송현녹지광장/" data-area="POI129">송현녹지광장 혼잡도 확인 →</a></li>
-  </ul>
-  <h2>고궁·문화유산 동네</h2>
-  <p class="note">휴궁일·입장 시간과 현장 통제는 방문 전 각 시설의 공식 안내를 확인하세요.</p>
-  <ul aria-label="고궁 문화유산 동네 혼잡도">
     <li><a href="../경복궁/" data-area="POI008">경복궁 혼잡도 확인 →</a></li>
     <li><a href="../광화문·덕수궁/" data-area="POI009">광화문·덕수궁 동네 혼잡도 확인 →</a></li>
     <li><a href="../창덕궁·종묘/" data-area="POI012">창덕궁·종묘 동네 혼잡도 확인 →</a></li>
     <li><a href="../서울-암사동-유적/" data-area="POI011">서울 암사동 유적 동네 혼잡도 확인 →</a></li>
   </ul>
-  <p class="note">자료: <a href="https://data.seoul.go.kr/dataVisual/seoul/guide.do">서울시 실시간 도시데이터</a>. 이 페이지는 동네를 모아 둔 입구이며, 여기서 현재 혼잡도를 미리 단정하지 않습니다.</p>
+  <p class="note">자료: <a href="https://data.seoul.go.kr/dataVisual/seoul/guide.do">서울시 실시간 도시데이터</a>. 관측 시각을 확인할 수 있는 값만 보여주며, 자료가 없거나 오래됐을 때는 동네 링크에서 다시 확인할 수 있어요.</p>
   <footer><p>앱에서는 ‘산책’ 목적으로 공원·고궁 동네를 비교할 수 있어요.</p><div class="stores"><a href="https://apps.apple.com/app/id6783810617">iPhone 앱 설치</a><a href="https://play.google.com/store/apps/details?id=kr.hongdoc.hansanmap">Android 앱 설치</a></div><a href="../all/">다른 동네도 확인하기 →</a></footer>
-</main></body>
+</main>
+<script src="../public-client.js" defer></script>
+<script src="../season-live.js" defer></script>
+</body>
 </html>

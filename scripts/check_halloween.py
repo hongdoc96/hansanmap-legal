@@ -80,7 +80,8 @@ def check(root):
     assert "인접" in source and "거리 자체의 혼잡도가 아니에요" in source
     assert "현장 통제와 공식 안내가 우선" in source
     assert source.count("중점관리 8곳·안전관리 6곳") == 1, "공식 관리대상 구분이 없다"
-    assert not re.search(r"fetch\s*\(|eyJ[A-Za-z0-9_-]+\.|지금 안전", source), "정적 안전 안내에 실시간 값/키를 넣지 않는다"
+    assert not re.search(r"fetch\s*\(|eyJ[A-Za-z0-9_-]+\.|지금 안전", source), "본문에 키·개별 fetch·안전 단정을 넣지 않는다"
+    assert source.count('src="../season-live.js"') == 1, "공용 실시간 판의 배선이 없다"
     hub = (root / "place/all/index.html").read_text(encoding="utf-8")
     assert hub.count(f'href="../{SLUG}/"') == 1, "허브 입구는 하나여야 한다"
     assert hub.count("서울시 2026 관리대상") == 1, "허브의 목록 연도가 다르다"
