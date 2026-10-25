@@ -61,7 +61,7 @@
   <script>
     (function () {
       var SB = 'https://zrvuucvjcmlcvhhvfzzd.supabase.co';
-      var ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpydnV1Y3ZqY21sY3ZoaHZmenpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMzQwNjIsImV4cCI6MjA5NjYxMDA2Mn0.PgwGvh1qS27t7AcepWtIm26MlZ6KkrplAOIMfRHgKFQ';
+      var ANON = 'sb_publishable_Xj1EgBM4R28wH34tLawX-g_N2kAJfNk';
       var RANK = { '여유': 0, '보통': 1, '약간붐빔': 2, '붐빔': 3 };
       var EMO = { '여유': '🟢', '보통': '🟡', '약간붐빔': '🟠', '붐빔': '🔴' };
       function norm(l) { return String(l == null ? '' : l).replace(/\s/g, ''); }
@@ -98,8 +98,7 @@
       function rpc(fn, body) {
         return fetch(SB + '/rest/v1/rpc/' + fn, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'apikey': ANON,
-                     'Authorization': 'Bearer ' + ANON },
+          headers: { 'Content-Type': 'application/json', 'apikey': ANON },
           body: JSON.stringify(body || {})
         }).then(function (r) { return r.json(); });
       }

@@ -25,8 +25,8 @@ import urllib.request
 from datetime import datetime, timezone, timedelta
 
 SB = "https://zrvuucvjcmlcvhhvfzzd.supabase.co"
-# 앱·공유 착지 페이지에 이미 내장된 공개 anon 키(RLS 보호, 서버 비밀 아님).
-ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpydnV1Y3ZqY21sY3ZoaHZmenpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMzQwNjIsImV4cCI6MjA5NjYxMDA2Mn0.PgwGvh1qS27t7AcepWtIm26MlZ6KkrplAOIMfRHgKFQ"
+# 공개 publishable 키다. 주간 재생성과 브라우저 조회 모두 apikey 헤더만 사용한다.
+ANON = "sb_publishable_Xj1EgBM4R28wH34tLawX-g_N2kAJfNk"
 BASE = "https://hongdoc96.github.io/hansanmap-legal"
 PLAY = "https://play.google.com/store/apps/details?id=kr.hongdoc.hansanmap"
 APPSTORE = "https://apps.apple.com/app/id6783810617"
@@ -67,7 +67,6 @@ def fetch(path):
             f"{SB}{path}",
             headers={
                 "apikey": ANON,
-                "Authorization": f"Bearer {ANON}",
                 "Range": f"{start}-{start + 999}",
             },
         )
@@ -84,7 +83,6 @@ def rpc(fn, body):
         data=json.dumps(body).encode(),
         headers={
             "apikey": ANON,
-            "Authorization": f"Bearer {ANON}",
             "Content-Type": "application/json",
         },
     )
@@ -287,7 +285,7 @@ def build_area(area, cells, neighbors, today_iso, have_cards=frozenset()):
   ["ctaApp","liveCta"].forEach(function(id){{
    var el=document.getElementById(id); if(el) el.setAttribute("href","{APPSTORE}");
   }});
- fetch(SB+"/rest/v1/rpc/get_seoul_area_detail",{{method:"POST",headers:{{"Content-Type":"application/json",apikey:ANON,Authorization:"Bearer "+ANON}},body:JSON.stringify({{p_area_code:"{code}"}})}})
+ fetch(SB+"/rest/v1/rpc/get_seoul_area_detail",{{method:"POST",headers:{{"Content-Type":"application/json",apikey:ANON}},body:JSON.stringify({{p_area_code:"{code}"}})}})
  .then(function(r){{return r.json()}}).then(function(rows){{
   var row=rows&&rows[0]; if(!row||!row.congest_lvl)return;
   var age=row.updated_at?Math.max(0,Math.round((Date.now()-new Date(row.updated_at).getTime())/60000)):null;
@@ -414,7 +412,7 @@ def main():
  var COL={{"여유":"#3182F6","보통":"#F5B921","약간붐빔":"#F57F2C","붐빔":"#EF4B4B"}};
  function norm(l){{return String(l==null?"":l).replace(/\s/g,"")}}
  // 목록은 정적으로 이름순이다(크롤러가 보는 순서). 라이브는 색과 등급만 입힌다 — 재정렬하지 않는다.
- fetch(SB+"/rest/v1/rpc/list_seoul_area_status",{{method:"POST",headers:{{"Content-Type":"application/json",apikey:ANON,Authorization:"Bearer "+ANON}},body:"{{}}"}})
+ fetch(SB+"/rest/v1/rpc/list_seoul_area_status",{{method:"POST",headers:{{"Content-Type":"application/json",apikey:ANON}},body:"{{}}"}})
  .then(function(r){{return r.json()}}).then(function(rows){{
   if(!Array.isArray(rows))return;
   var byCode={{}},newest=0;

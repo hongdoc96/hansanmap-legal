@@ -18,6 +18,7 @@ const IOS_UA = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)';
 // noUSP — URLSearchParams 가 없는 구형 브라우저 흉내(자동 앱 열기가 그래도 도는지 본다).
 function run(search, ua = ANDROID_UA, { noUSP = false } = {}) {
   const els = {};
+  const requests = [];
   const mk = () => ({ textContent: '한산맵에서 보기', style: {}, attrs: {},
                       setAttribute(k, v) { this.attrs[k] = v; },
                       appendChild() {}, className: '' });
@@ -27,7 +28,7 @@ function run(search, ua = ANDROID_UA, { noUSP = false } = {}) {
     document: { getElementById: id => els[id], createElement: () => mk() },
     window: { location: { search, set href(v) { sandbox.navigated = v; } } },
     navigator: { userAgent: ua, platform: ua === IOS_UA ? 'iPhone' : 'Linux', maxTouchPoints: 5 },
-    fetch: () => new Promise(() => {}),   // 응답 없음 — 제목은 네트워크와 무관해야 한다
+    fetch: (url, options) => {requests.push({url, options}); return new Promise(() => {});},
     ...(noUSP ? {} : { URLSearchParams }), Date, Math, JSON, String, Number, Object,
   };
   const vm = require('vm');
@@ -35,7 +36,7 @@ function run(search, ua = ANDROID_UA, { noUSP = false } = {}) {
   for (const s of scripts) vm.runInContext(s, ctx);
   return { title: els.title.textContent, more: els.areaPage,
            scheme: els.openApp.attrs.href, navigated: sandbox.navigated,
-           store: els.storeLink.attrs.href, hint: els.installHint };
+           store: els.storeLink.attrs.href, hint: els.installHint, requests };
 }
 
 let fail = 0;
@@ -46,6 +47,9 @@ function eq(label, got, want) {
 }
 
 const enc = encodeURIComponent;
+const publicRequests = run('?area=POI054').requests;
+eq('공개 조회는 새 공개 키를 apikey로만 보낸다', publicRequests.length > 0 && publicRequests.every(r =>
+  r.options.headers.apikey.startsWith('sb_publishable_') && !Object.keys(r.options.headers).some(k => k.toLowerCase() === 'authorization')), true);
 // 🔴 이번에 고친 그것 — 위조된 이름은 제목이 되지 못한다(카드는 POI054=혜화역 값이다).
 eq('위조 링크 ?area=POI054&name=홍대', run(`?area=POI054&name=${enc('홍대')}`).title,
    '혜화역 — 한산맵에서 보기');

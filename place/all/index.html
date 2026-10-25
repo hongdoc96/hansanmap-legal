@@ -32,13 +32,13 @@
 <p style="font-size:11.5px;color:#8595A5;margin-top:18px">페이지 갱신 2026-10-19</p></div>
 <script>
 (function(){
- var SB="https://zrvuucvjcmlcvhhvfzzd.supabase.co",ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpydnV1Y3ZqY21sY3ZoaHZmenpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMzQwNjIsImV4cCI6MjA5NjYxMDA2Mn0.PgwGvh1qS27t7AcepWtIm26MlZ6KkrplAOIMfRHgKFQ";
+ var SB="https://zrvuucvjcmlcvhhvfzzd.supabase.co",ANON="sb_publishable_Xj1EgBM4R28wH34tLawX-g_N2kAJfNk";
  if(/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1))
   document.getElementById("ctaApp").setAttribute("href","https://apps.apple.com/app/id6783810617");
  var COL={"여유":"#3182F6","보통":"#F5B921","약간붐빔":"#F57F2C","붐빔":"#EF4B4B"};
  function norm(l){return String(l==null?"":l).replace(/\s/g,"")}
  // 목록은 정적으로 이름순이다(크롤러가 보는 순서). 라이브는 색과 등급만 입힌다 — 재정렬하지 않는다.
- fetch(SB+"/rest/v1/rpc/list_seoul_area_status",{method:"POST",headers:{"Content-Type":"application/json",apikey:ANON,Authorization:"Bearer "+ANON},body:"{}"})
+ fetch(SB+"/rest/v1/rpc/list_seoul_area_status",{method:"POST",headers:{"Content-Type":"application/json",apikey:ANON},body:"{}"})
  .then(function(r){return r.json()}).then(function(rows){
   if(!Array.isArray(rows))return;
   var byCode={},newest=0;

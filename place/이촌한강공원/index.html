@@ -74,7 +74,7 @@
 </div>
 <script>
 (function(){
- var SB="https://zrvuucvjcmlcvhhvfzzd.supabase.co",ANON="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpydnV1Y3ZqY21sY3ZoaHZmenpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMzQwNjIsImV4cCI6MjA5NjYxMDA2Mn0.PgwGvh1qS27t7AcepWtIm26MlZ6KkrplAOIMfRHgKFQ";
+ var SB="https://zrvuucvjcmlcvhhvfzzd.supabase.co",ANON="sb_publishable_Xj1EgBM4R28wH34tLawX-g_N2kAJfNk";
  var RANKS=[[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 1, 0, 1, 1, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 0]];
  var LVR={"여유":0,"보통":1,"약간붐빔":2,"붐빔":3};
  function norm(l){return String(l==null?"":l).replace(/\s/g,"")}
@@ -83,7 +83,7 @@
   ["ctaApp","liveCta"].forEach(function(id){
    var el=document.getElementById(id); if(el) el.setAttribute("href","https://apps.apple.com/app/id6783810617");
   });
- fetch(SB+"/rest/v1/rpc/get_seoul_area_detail",{method:"POST",headers:{"Content-Type":"application/json",apikey:ANON,Authorization:"Bearer "+ANON},body:JSON.stringify({p_area_code:"POI108"})})
+ fetch(SB+"/rest/v1/rpc/get_seoul_area_detail",{method:"POST",headers:{"Content-Type":"application/json",apikey:ANON},body:JSON.stringify({p_area_code:"POI108"})})
  .then(function(r){return r.json()}).then(function(rows){
   var row=rows&&rows[0]; if(!row||!row.congest_lvl)return;
   var age=row.updated_at?Math.max(0,Math.round((Date.now()-new Date(row.updated_at).getTime())/60000)):null;
